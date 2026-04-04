@@ -2,8 +2,8 @@ const ROOT_HTML = `<!-- PROPRIETARY. Copyright 2025-2026 BlackRoad OS, Inc. All 
 <!DOCTYPE html><html lang="en"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>RoadWork — BlackRoad OS</title>
-<meta name="description" content="RoadWork — Business Automation. Part of BlackRoad OS.">
-<meta property="og:title" content="RoadWork — BlackRoad OS"><meta property="og:description" content="RoadWork: business automation with 27 AI agents. Finance, support, marketing, ops, legal, analytics, strategy. Your business builds itself.">
+<meta name="description" content="Business automation with 7 AI agents. Invoicing, support tickets, marketing campaigns, contracts, scheduling, KPIs. Your business runs itself.">
+<meta property="og:title" content="RoadWork — AI Business Automation — BlackRoad OS"><meta property="og:description" content="7 AI agents handle invoicing, support, marketing, contracts, scheduling, and KPIs. Your business runs itself.">
 <meta property="og:url" content="https://roadwork.blackroad.io"><meta property="og:image" content="https://images.blackroad.io/pixel-art/road-logo.png">
 <meta name="twitter:card" content="summary_large_image"><meta name="robots" content="index, follow, noai, noimageai">
 <link rel="canonical" href="https://roadwork.blackroad.io/">
@@ -590,6 +590,7 @@ export default {
     const method = request.method;
 
     if (path === "/" || path === "") return new Response(ROOT_HTML, { headers: { ...CORS, "Content-Type": "text/html;charset=UTF-8" } });
+    if (path === '/sitemap.xml') return new Response(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url><loc>https://roadwork.blackroad.io/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>\n</urlset>`, { headers: { 'Content-Type': 'application/xml', ...CORS } });
     await ensureTables(env.DB);
     await seedCrew(env.DB);
 
@@ -1487,22 +1488,22 @@ export default {
     if (path === '/api/status/check' && method === 'GET') {
       const SERVICES = [
         { name: 'BlackRoad OS', url: 'https://blackroad.io', cat: 'core' },
-        { name: 'RoadChat', url: 'https://chat.blackroad.io', cat: 'core' },
-        { name: 'RoadSearch', url: 'https://search.blackroad.io', cat: 'core' },
+        { name: 'RoadChat', url: 'https://roadtrip.blackroad.io', cat: 'core' },
+        { name: 'RoadSearch', url: 'https://roadview.blackroad.io', cat: 'core' },
         { name: 'RoadTrip', url: 'https://roadtrip.blackroad.io', cat: 'core' },
-        { name: 'BackRoad Social', url: 'https://social.blackroad.io', cat: 'core' },
+        { name: 'BackRoad Social', url: 'https://backroad.blackroad.io', cat: 'core' },
         { name: 'Auth', url: 'https://auth.blackroad.io', cat: 'infra' },
         { name: 'Images CDN', url: 'https://images.blackroad.io', cat: 'infra' },
         { name: 'Analytics', url: 'https://analytics.blackroad.io', cat: 'infra' },
-        { name: 'RoadPay', url: 'https://pay.blackroad.io', cat: 'product' },
-        { name: 'RoadWork Tutor', url: 'https://tutor.blackroad.io', cat: 'product' },
+        { name: 'RoadPay', url: 'https://roadcoin.blackroad.io', cat: 'product' },
+        { name: 'RoadWork Tutor', url: 'https://roadie.blackroad.io', cat: 'product' },
         { name: 'RoadCode', url: 'https://roadcode.blackroad.io', cat: 'product' },
-        { name: 'RoadCanvas', url: 'https://canvas.blackroad.io', cat: 'product' },
+        { name: 'RoadCanvas', url: 'https://blackboard.blackroad.io', cat: 'product' },
         { name: 'RoadVideo', url: 'https://video.blackroad.io', cat: 'product' },
         { name: 'RoadLive', url: 'https://live.blackroad.io', cat: 'product' },
         { name: 'RoadRadio', url: 'https://radio.blackroad.io', cat: 'product' },
         { name: 'Pixel HQ', url: 'https://hq.blackroad.io', cat: 'product' },
-        { name: 'RoadGame', url: 'https://game.blackroad.io', cat: 'product' },
+        { name: 'RoadGame', url: 'https://roadworld.blackroad.io', cat: 'product' },
       ];
       const results = await Promise.all(SERVICES.map(async (svc) => {
         const start = Date.now();

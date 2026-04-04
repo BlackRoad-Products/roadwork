@@ -1,0 +1,15 @@
+name = "roadwork-blackroad"
+main = "src/worker.js"
+compatibility_date = "2026-03-31"
+
+[ai]
+binding = "AI"
+
+[[routes]]
+pattern = "roadwork.blackroad.io/*"
+zone_name = "blackroad.io"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "roadwork"
+database_id = "1ed3d9a9-91a8-4689-994e-2e2dd68a54d8"

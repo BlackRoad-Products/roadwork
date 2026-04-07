@@ -22,7 +22,15 @@ function page(tasks: any[], alerts: any[]): Response {
   for(const t of tasks) if(byCol[t.status as Status]) byCol[t.status as Status].push(t);
 
   const html=`<!DOCTYPE html><html lang="en"><head>
-<meta charset="UTF-8"><title>RoadWork — Task Manager</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RoadWork — Task Manager</title>
+<meta name="description" content="Convoy task management with drag-and-drop kanban. BACKLOG to DELIVERED pipeline.">
+<link rel="canonical" href="https://roadwork.blackroad.io/">
+<meta property="og:title" content="RoadWork — Task Manager">
+<meta property="og:description" content="Convoy task management with drag-and-drop kanban. BACKLOG to DELIVERED pipeline.">
+<meta property="og:url" content="https://roadwork.blackroad.io/">
+<meta property="og:type" content="website">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"RoadWork","url":"https://roadwork.blackroad.io/","description":"Convoy task management with drag-and-drop kanban. BACKLOG to DELIVERED pipeline.","applicationCategory":"BusinessApplication","publisher":{"@type":"Organization","name":"BlackRoad OS, Inc.","url":"https://blackroad.io"}}</script>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}

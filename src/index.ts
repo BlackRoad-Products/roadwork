@@ -5,7 +5,7 @@ async function track(env: Env, req: Request, path: string) { const cf=(req as an
 
 type Status = "todo"|"doing"|"done"|"blocked";
 const COLS: Status[] = ["todo","doing","done","blocked"];
-const COL_COLORS: Record<Status,string> = {todo:"#444",doing:"#4488FF",done:"#00E676",blocked:"#FF2255"};
+const COL_COLORS: Record<Status,string> = {todo:"#444",doing:"#3E84FF",done:"#00E676",blocked:"#FF2255"};
 
 async function getTasks(env: Env): Promise<any[]> {
   const list=await env.STORE.list({prefix:"task:"});
@@ -26,7 +26,7 @@ function page(tasks: any[], alerts: any[]): Response {
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#030303;--card:#0a0a0a;--border:#111;--text:#f0f0f0;--sub:#444;--orange:#FF6B35;--grad:linear-gradient(135deg,#FF6B35,#F5A623)}
+:root{--bg:#030303;--card:#0a0a0a;--border:#111;--text:#f0f0f0;--sub:#444;--orange:#FF6B2B;--grad:linear-gradient(135deg,#FF6B2B,#FF6B2B)}
 html,body{min-height:100vh;background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif}
 .grad-bar{height:2px;background:var(--grad)}
 .wrap{max-width:1200px;margin:0 auto;padding:24px 20px}

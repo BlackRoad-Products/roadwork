@@ -5,7 +5,7 @@ async function track(env: Env, req: Request, path: string) { const cf=(req as an
 
 type Status = "todo"|"doing"|"done"|"blocked";
 const COLS: Status[] = ["todo","doing","done","blocked"];
-const COL_COLORS: Record<Status,string> = {todo:"#444",doing:"#3E84FF",done:"#00E676",blocked:"#FF2255"};
+const COL_COLORS: Record<Status,string> = {todo:"#444",doing:"#3E84FF",done:"#22c55e",blocked:"#FF2255"};
 
 async function getTasks(env: Env): Promise<any[]> {
   const list=await env.STORE.list({prefix:"task:"});

@@ -80,7 +80,7 @@ ${alerts.length?`<div class="alerts"><div style="font-size:.65rem;color:#FF2255;
 
 <div class="board">
 ${COLS.map(col=>`<div class="col" id="col-${col}">
-  <div class="col-header"><div class="col-dot" style="background:${COL_COLORS[col]}"></div><div class="col-title" style="color:${COL_COLORS[col]}">${col}</div><div class="col-count">${byCol[col].length}</div></div>
+  <div class="col-header"><div class="col-dot" style="background:${COL_COLORS[col]}"></div><div class="col-title" style="color:#e0e0e0">${col}</div><div class="col-count">${byCol[col].length}</div></div>
   ${byCol[col].map(t=>`<div class="task" draggable="true" data-id="${t.id}">
     <div class="task-title">${t.title}</div>
     <div class="task-meta"><span class="task-tag">${t.priority||'normal'}</span>${t.service?`<span>${t.service}</span>`:''}<span>${new Date(t.ts).toLocaleDateString()}</span></div>

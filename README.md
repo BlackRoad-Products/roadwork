@@ -56,7 +56,7 @@ Business automation with 7 named AI agents handling finance, support, marketing,
 
 ## Status
 
-**LIVE** | [work.blackroad.io](https://work.blackroad.io)
+**LIVE** | [roadwork.blackroad.io](https://roadwork.blackroad.io)
 
 ## How It Powers The BlackRoad
 

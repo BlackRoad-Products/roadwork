@@ -55,8 +55,33 @@ async function loadInvoices(){try{const d=await(await fetch('/api/invoices')).js
 async function loadTimeEntries(){try{const d=await(await fetch('/api/time')).json();const m=document.getElementById('time-metrics');m.innerHTML='<div class="card"><div class="label">Today</div><div class="metric">'+((d.summary?.today_hours||0).toFixed(1))+'h</div><p>Hours tracked</p></div><div class="card"><div class="label">This Week</div><div class="metric">'+((d.summary?.week_hours||0).toFixed(1))+'h</div><p>Hours tracked</p></div><div class="card"><div class="label">Billable</div><div class="metric">'+((d.summary?.billable_hours||0).toFixed(1))+'h</div><p>This week</p></div><div class="card"><div class="label">Active Timers</div><div class="metric">'+(d.summary?.active_timers||0)+'</div><p>Running now</p></div>';const l=document.getElementById('time-entries');l.innerHTML='<table><tr><th>Task</th><th>Member</th><th>Start</th><th>Duration</th><th>Billable</th><th>Status</th></tr>'+(d.entries||[]).map(e=>'<tr><td style="color:var(--text)">'+(e.task_title||e.task_id||'-')+'</td><td>'+(e.member_name||'-')+'</td><td style="font-family:var(--jb);font-size:10px">'+e.started_at+'</td><td>'+(e.duration_minutes?Math.round(e.duration_minutes)+'m':'running')+'</td><td>'+(e.billable?'Yes':'No')+'</td><td><span class="pill pill-'+(e.stopped_at?'green':'amber')+'">'+(e.stopped_at?'done':'active')+'</span></td></tr>').join('')+'</table>'}catch(e){}}
 async function loadExpenses(){try{const d=await(await fetch('/api/expenses')).json();const m=document.getElementById('expense-metrics');m.innerHTML='<div class="card"><div class="label">This Month</div><div class="metric">$'+((d.summary?.month_total||0).toFixed(2))+'</div><p>Total expenses</p></div><div class="card"><div class="label">Pending</div><div class="metric">'+(d.summary?.pending_count||0)+'</div><p>Awaiting approval</p></div><div class="card"><div class="label">Categories</div><div class="metric">'+(d.summary?.categories||0)+'</div><p>Expense types</p></div><div class="card"><div class="label">Reimbursable</div><div class="metric">$'+((d.summary?.reimbursable||0).toFixed(2))+'</div><p>This month</p></div>';const l=document.getElementById('expense-list');l.innerHTML='<table><tr><th>Description</th><th>Category</th><th>Amount</th><th>Date</th><th>Status</th></tr>'+(d.expenses||[]).map(e=>'<tr><td style="color:var(--text)">'+e.description+'</td><td><span class="pill pill-violet">'+(e.category||'other')+'</span></td><td>$'+e.amount.toFixed(2)+'</td><td>'+e.expense_date+'</td><td><span class="pill pill-'+(e.status==='approved'?'green':e.status==='rejected'?'red':'amber')+'">'+e.status+'</span></td></tr>').join('')+'</table>'}catch(e){}}
 fetch('/api/health').then(r=>r.json()).then(d=>{document.getElementById('st').textContent='RoadWork is live — '+JSON.stringify(d).slice(0,80)}).catch(()=>{document.getElementById('st').textContent='RoadWork is running'});loadDashboard();
+window.addEventListener('message',function(e){if(e.data</script></script>e.data.type==='blackroad-os:context'){window._osUser=e.data.user;window._osToken=e.data.token;}});if(window.parent!==window)window.parent.postMessage({type:'blackroad-os:request-context'},'*');
 </script>
+<script>(function(){var d={path:location.pathname,ref:document.referrer,w:screen.width,h:screen.height,t:Date.now()};navigator.sendBeacon&&navigator.sendBeacon('/api/analytics',JSON.stringify(d))})()</script><script>!function(){var b=document.createElement("div");b.style.cssText="position:fixed;top:0;left:0;right:0;z-index:99999;background:#0a0a0a;border-bottom:1px solid #1a1a1a;padding:6px 16px;display:flex;align-items:center;justify-content:space-between;font-family:sans-serif";b.innerHTML='<span style="font-size:11px;color:#737373">Part of <a href="https://os.blackroad.io" style="color:#f5f5f5;font-weight:600;text-decoration:none">BlackRoad OS</a></span><a href="https://os.blackroad.io" style="font-size:10px;font-weight:600;padding:4px 12px;background:#f5f5f5;color:#000;border-radius:4px;text-decoration:none">Try Free</a>';b.id="br-bar";if(!document.getElementById("br-bar")){document.body.prepend(b);document.body.style.paddingTop=(parseInt(getComputedStyle(document.body).paddingTop)||0)+32+"px"}}();</script>
 </body></html>`;
+
+const RW_WORKFLOWS = [
+  { slug: 'sprint-planning', name: 'Sprint Planning', category: 'Engineering', description: 'Structured sprint planning workflow with backlog grooming, capacity planning, and commitment tracking.', steps: ['Review and prioritize backlog items', 'Estimate story points for top items', 'Calculate team capacity for the sprint', 'Select stories that fit capacity', 'Break stories into tasks', 'Assign owners and set sprint goal', 'Document sprint commitment and share'], roles: ['PM', 'Dev', 'Designer'], automatable: true, related: ['standup-format', 'retrospective', 'code-review'] },
+  { slug: 'bug-triage', name: 'Bug Triage', category: 'Engineering', description: 'Systematic bug triage process. Categorize, prioritize, and assign bugs based on severity and impact.', steps: ['Reproduce the bug and document steps', 'Assess severity (critical/high/medium/low)', 'Check for duplicates in existing issues', 'Assign priority based on user impact', 'Route to appropriate team or developer', 'Set target fix timeline', 'Notify stakeholders if customer-facing'], roles: ['PM', 'Dev', 'QA'], automatable: true, related: ['incident-response', 'qa-testing', 'code-review'] },
+  { slug: 'feature-request', name: 'Feature Request Pipeline', category: 'Product', description: 'Evaluate, prioritize, and track feature requests from ideation to delivery.', steps: ['Log feature request with user context', 'Score based on impact vs effort matrix', 'Group with similar requests', 'Add to product roadmap if score > threshold', 'Create design spec and technical RFC', 'Break into implementation tasks', 'Schedule for upcoming sprint'], roles: ['PM', 'Designer', 'Dev'], automatable: true, related: ['sprint-planning', 'design-review', 'okr-tracking'] },
+  { slug: 'code-review', name: 'Code Review Checklist', category: 'Engineering', description: 'Thorough code review process covering correctness, security, performance, and maintainability.', steps: ['Check PR description and linked issue', 'Review for correctness and edge cases', 'Verify security (no secrets, input validation)', 'Check performance implications', 'Ensure test coverage for changes', 'Review code style and readability', 'Approve or request changes with specific feedback'], roles: ['Dev', 'Lead'], automatable: false, related: ['deploy-checklist', 'qa-testing', 'security-audit'] },
+  { slug: 'deploy-checklist', name: 'Deploy Checklist', category: 'Engineering', description: 'Pre-deployment and post-deployment checklist to ensure safe releases with rollback plans.', steps: ['Run full test suite and verify pass', 'Review migration scripts if any', 'Check feature flags are configured', 'Notify team of deployment window', 'Deploy to staging and smoke test', 'Deploy to production with monitoring', 'Verify key metrics for 15 minutes', 'Update changelog and notify stakeholders'], roles: ['Dev', 'DevOps'], automatable: true, related: ['incident-response', 'qa-testing', 'code-review'] },
+  { slug: 'incident-response', name: 'Incident Response', category: 'Security', description: 'Step-by-step incident response plan. Detection, containment, resolution, and post-mortem.', steps: ['Detect and confirm the incident', 'Assign incident commander', 'Assess severity and impact scope', 'Communicate status to stakeholders', 'Implement containment measures', 'Deploy fix or workaround', 'Verify resolution and monitor', 'Schedule post-mortem within 48 hours'], roles: ['DevOps', 'Dev', 'PM'], automatable: true, related: ['deploy-checklist', 'security-audit', 'bug-triage'] },
+  { slug: 'onboarding-new-hire', name: 'New Hire Onboarding', category: 'Operations', description: 'Comprehensive onboarding workflow for new team members. First day through first month.', steps: ['Send welcome email with start date details', 'Set up accounts (email, Slack, GitHub, tools)', 'Assign onboarding buddy', 'Schedule intro meetings with each team', 'Walk through codebase and architecture', 'Assign first starter task', 'Check in at end of week 1, 2, and 4'], roles: ['HR', 'Manager', 'Lead'], automatable: true, related: ['standup-format', 'sprint-planning', 'retrospective'] },
+  { slug: 'client-onboarding', name: 'Client Onboarding', category: 'Business', description: 'Structured client onboarding from contract signed to first value delivered.', steps: ['Send welcome packet and questionnaire', 'Schedule kickoff meeting', 'Gather credentials and access', 'Configure account and environment', 'Run initial setup and integration', 'Train client on core features', 'Schedule 30-day check-in'], roles: ['Account Manager', 'Dev', 'Support'], automatable: true, related: ['vendor-evaluation', 'budget-approval', 'okr-tracking'] },
+  { slug: 'content-pipeline', name: 'Content Pipeline', category: 'Product', description: 'End-to-end content production workflow from ideation to publication and promotion.', steps: ['Brainstorm topics based on keyword research', 'Create content brief with outline', 'Write first draft', 'Review and edit for quality', 'Create visuals and media assets', 'Schedule publication date and time', 'Promote across channels post-publish'], roles: ['Writer', 'Editor', 'Designer'], automatable: true, related: ['design-review', 'feature-request', 'release-cycle'] },
+  { slug: 'release-cycle', name: 'Release Cycle', category: 'Engineering', description: 'Full release cycle from feature freeze to production deployment and user communication.', steps: ['Announce feature freeze date', 'Complete all code reviews', 'Run regression test suite', 'Create release branch and tag', 'Deploy to staging for final QA', 'Write release notes', 'Deploy to production', 'Send release announcement'], roles: ['Dev', 'QA', 'PM'], automatable: true, related: ['deploy-checklist', 'qa-testing', 'sprint-planning'] },
+  { slug: 'qa-testing', name: 'QA Testing Process', category: 'Engineering', description: 'Quality assurance testing workflow covering unit, integration, and end-to-end testing.', steps: ['Review test plan and requirements', 'Execute automated test suite', 'Perform manual exploratory testing', 'Test edge cases and error states', 'Verify cross-browser compatibility', 'Document bugs found with reproduction steps', 'Sign off when all critical tests pass'], roles: ['QA', 'Dev'], automatable: true, related: ['code-review', 'deploy-checklist', 'release-cycle'] },
+  { slug: 'retrospective', name: 'Sprint Retrospective', category: 'Operations', description: 'Facilitated retrospective format to identify improvements, celebrate wins, and address blockers.', steps: ['Set up anonymous feedback board', 'Collect what went well items', 'Collect what needs improvement items', 'Vote on top items to discuss', 'Discuss top 3-5 items as a group', 'Define concrete action items with owners', 'Follow up on previous retro actions'], roles: ['PM', 'Dev', 'Designer'], automatable: false, related: ['sprint-planning', 'standup-format', 'okr-tracking'] },
+  { slug: 'okr-tracking', name: 'OKR Tracking', category: 'Business', description: 'Quarterly OKR planning, tracking, and scoring workflow. Align team efforts with company goals.', steps: ['Define 3-5 objectives for the quarter', 'Set 2-4 key results per objective', 'Assign owners to each key result', 'Set up weekly check-in cadence', 'Score key results at mid-quarter', 'Final scoring at quarter end', 'Present results and plan next quarter'], roles: ['PM', 'Lead', 'Executive'], automatable: true, related: ['sprint-planning', 'retrospective', 'standup-format'] },
+  { slug: 'standup-format', name: 'Daily Standup Format', category: 'Operations', description: 'Efficient daily standup structure. Keep it under 15 minutes with clear status and blockers.', steps: ['Each member shares what they completed yesterday', 'Share what they plan to work on today', 'Flag any blockers or dependencies', 'Note items for offline discussion', 'Update task board status', 'Capture action items for blockers'], roles: ['PM', 'Dev', 'Designer'], automatable: true, related: ['sprint-planning', 'retrospective', 'okr-tracking'] },
+  { slug: 'design-review', name: 'Design Review', category: 'Product', description: 'Structured design review process for UI/UX work. Feedback, iteration, and approval workflow.', steps: ['Present design with context and goals', 'Review against design system guidelines', 'Collect feedback from stakeholders', 'Assess accessibility compliance', 'Iterate based on feedback', 'Get final approval from design lead', 'Hand off to engineering with specs'], roles: ['Designer', 'PM', 'Dev'], automatable: false, related: ['feature-request', 'code-review', 'content-pipeline'] },
+  { slug: 'security-audit', name: 'Security Audit', category: 'Security', description: 'Periodic security audit checklist covering authentication, data handling, and infrastructure.', steps: ['Review authentication and authorization controls', 'Scan dependencies for known vulnerabilities', 'Check for exposed secrets in codebase', 'Audit API endpoints for proper access control', 'Review data encryption at rest and in transit', 'Test for common web vulnerabilities (XSS, SQLI)', 'Document findings and remediation plan'], roles: ['Security', 'DevOps', 'Dev'], automatable: true, related: ['incident-response', 'code-review', 'data-migration'] },
+  { slug: 'data-migration', name: 'Data Migration', category: 'Engineering', description: 'Safe data migration workflow with validation, backup, and rollback procedures.', steps: ['Document source and target schemas', 'Create migration scripts with rollback', 'Back up all data before starting', 'Run migration on staging with test data', 'Validate row counts and data integrity', 'Execute production migration during low traffic', 'Verify data in production and monitor for errors'], roles: ['Dev', 'DBA', 'DevOps'], automatable: true, related: ['deploy-checklist', 'security-audit', 'release-cycle'] },
+  { slug: 'api-integration', name: 'API Integration', category: 'Engineering', description: 'Workflow for integrating third-party APIs. Evaluation, implementation, and monitoring.', steps: ['Evaluate API documentation and limits', 'Set up API keys and authentication', 'Build integration layer with error handling', 'Implement rate limiting and retry logic', 'Write integration tests', 'Deploy with monitoring and alerting', 'Document integration for team reference'], roles: ['Dev', 'DevOps'], automatable: true, related: ['code-review', 'deploy-checklist', 'security-audit'] },
+  { slug: 'vendor-evaluation', name: 'Vendor Evaluation', category: 'Business', description: 'Structured vendor evaluation process. Compare options, score against criteria, and make decisions.', steps: ['Define requirements and evaluation criteria', 'Research and shortlist 3-5 vendors', 'Schedule demos or trial periods', 'Score each vendor against criteria matrix', 'Check references and reviews', 'Negotiate pricing and terms', 'Make final selection and document rationale'], roles: ['PM', 'Lead', 'Finance'], automatable: false, related: ['budget-approval', 'api-integration', 'client-onboarding'] },
+  { slug: 'budget-approval', name: 'Budget Approval', category: 'Business', description: 'Budget request and approval workflow. From proposal to sign-off with proper documentation.', steps: ['Draft budget proposal with justification', 'Break down costs by category', 'Identify ROI or cost savings', 'Submit for manager review', 'Address questions and revise if needed', 'Get final approval signature', 'Set up tracking and reporting'], roles: ['PM', 'Finance', 'Executive'], automatable: true, related: ['vendor-evaluation', 'okr-tracking', 'client-onboarding'] },
+];
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
@@ -64,6 +89,13 @@ const CORS = {
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
   'Content-Type': 'application/json',
 };
+
+function stampChain(action, entity, details, road_id) {
+  fetch('https://roadchain.blackroad.io/api/ledger',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,entity,details:typeof details==='string'?details:JSON.stringify(details),road_id:road_id||'system',app:'roadwork',ts:new Date().toISOString()})}).catch(()=>{});
+}
+function earnCoin(road_id, action, amount) {
+  fetch('https://roadcoin.blackroad.io/api/earn',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({road_id:road_id||'system',action,amount:amount||1})}).catch(()=>{});
+}
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), { status, headers: CORS });
@@ -590,9 +622,67 @@ export default {
     const method = request.method;
 
     if (path === "/" || path === "") return new Response(ROOT_HTML, { headers: { ...CORS, "Content-Type": "text/html;charset=UTF-8" } });
-    if (path === '/sitemap.xml') return new Response(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url><loc>https://roadwork.blackroad.io/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>\n</urlset>`, { headers: { 'Content-Type': 'application/xml', ...CORS } });
+    if (path === '/sitemap.xml') {
+      const wfUrls = RW_WORKFLOWS.map(w => `  <url><loc>https://roadwork.blackroad.io/workflows/${w.slug}</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>`).join('\n');
+      return new Response(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url><loc>https://roadwork.blackroad.io/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>\n  <url><loc>https://roadwork.blackroad.io/workflows</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>\n${wfUrls}\n</urlset>`, { headers: { 'Content-Type': 'application/xml', ...CORS } });
+    }
     await ensureTables(env.DB);
     await seedCrew(env.DB);
+    // Analytics tracking
+    if (path === '/api/track' && method === 'POST') {
+      try { const body = await request.json(); const cf = request.cf || {};
+        await env.DB.prepare("CREATE TABLE IF NOT EXISTS analytics_events (id INTEGER PRIMARY KEY AUTOINCREMENT, type TEXT DEFAULT 'pageview', path TEXT, referrer TEXT, country TEXT, city TEXT, device TEXT, screen TEXT, scroll_depth INTEGER DEFAULT 0, engagement_ms INTEGER DEFAULT 0, created_at TEXT DEFAULT (datetime('now')))").run();
+        await env.DB.prepare('INSERT INTO analytics_events (type, path, referrer, country, city, device, screen, scroll_depth, engagement_ms) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)').bind(body.type||'pageview', body.path||'/', body.referrer||'', cf.country||'', cf.city||'', body.device||'', body.screen||'', body.scroll||0, body.time||0).run();
+      } catch(e) {}
+      return json({ ok: true });
+    }
+
+    // ── Sovereign Analytics ──
+    if (path === '/api/analytics' && request.method === 'POST') {
+      try {
+        const body = await request.json();
+        const cf = request.cf || {};
+        const ip = request.headers.get('CF-Connecting-IP') || '';
+        const ipHash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(ip + '2026'));
+        const visitor = btoa(String.fromCharCode(...new Uint8Array(ipHash))).slice(0,12);
+        await env.DB.prepare(`CREATE TABLE IF NOT EXISTS br_analytics (id INTEGER PRIMARY KEY AUTOINCREMENT, path TEXT, referrer TEXT, visitor TEXT, country TEXT, city TEXT, screen TEXT, ts TEXT DEFAULT (datetime('now')))`).run();
+        await env.DB.prepare('INSERT INTO br_analytics (path, referrer, visitor, country, city, screen) VALUES (?,?,?,?,?,?)').bind(body.path||'/', body.ref||'', visitor, cf.country||'', cf.city||'', (body.w||0)+'x'+(body.h||0)).run();
+      } catch(e){}
+      return new Response('ok', {headers:{'Access-Control-Allow-Origin':'*'}});
+    }
+    if (path === '/api/analytics/stats') {
+      try {
+        await env.DB.prepare(`CREATE TABLE IF NOT EXISTS br_analytics (id INTEGER PRIMARY KEY AUTOINCREMENT, path TEXT, referrer TEXT, visitor TEXT, country TEXT, city TEXT, screen TEXT, ts TEXT DEFAULT (datetime('now')))`).run();
+        const total = await env.DB.prepare('SELECT COUNT(*) as c FROM br_analytics').first();
+        const unique = await env.DB.prepare('SELECT COUNT(DISTINCT visitor) as c FROM br_analytics').first();
+        const today = await env.DB.prepare("SELECT COUNT(*) as c FROM br_analytics WHERE ts > datetime('now','-1 day')").first();
+        const pages = await env.DB.prepare('SELECT path, COUNT(*) as views FROM br_analytics GROUP BY path ORDER BY views DESC LIMIT 10').all();
+        const countries = await env.DB.prepare('SELECT country, COUNT(*) as c FROM br_analytics WHERE country != "" GROUP BY country ORDER BY c DESC LIMIT 10').all();
+        return new Response(JSON.stringify({total_views:total?.c||0,unique_visitors:unique?.c||0,today:today?.c||0,top_pages:pages?.results||[],top_countries:countries?.results||[]}),{headers:{'Access-Control-Allow-Origin':'*','Content-Type':'application/json'}});
+      } catch(e) { return new Response(JSON.stringify({error:'analytics unavailable'}),{status:500,headers:{'Content-Type':'application/json'}}); }
+    }
+
+
+
+    // ─── Workflow content pages (SEO) ───
+    if (path === '/workflows') {
+      const cats = {};
+      RW_WORKFLOWS.forEach(w => { (cats[w.category] = cats[w.category] || []).push(w); });
+      const listing = Object.entries(cats).map(([cat, items]) =>
+        `<div style="margin-bottom:32px"><h2 style="font-size:18px;font-weight:700;margin-bottom:12px;color:#f5f5f5">${cat}</h2><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px">${items.map(w => `<a href="/workflows/${w.slug}" style="display:block;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:8px;padding:16px;text-decoration:none;transition:border-color .2s"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="font-size:14px;font-weight:600;color:#f5f5f5">${w.name}</span>${w.automatable ? '<span style="font-size:9px;padding:2px 8px;border-radius:10px;background:#22c55e22;color:#22c55e;font-family:monospace">automatable</span>' : ''}</div><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">${w.roles.map(r => `<span style="font-size:9px;padding:2px 6px;border-radius:10px;background:#FF6B2B22;color:#FF6B2B;font-family:monospace">${r}</span>`).join('')}</div><p style="font-size:12px;color:#737373;line-height:1.5">${w.description}</p></a>`).join('')}</div></div>`
+      ).join('');
+      const pageHtml = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Workflow Templates - RoadWork by BlackRoad OS</title><meta name="description" content="20+ workflow templates for engineering, operations, product, business, and security. Sprint planning, code review, incident response, and more."><meta property="og:title" content="Workflow Templates - RoadWork"><meta property="og:description" content="20+ ready-to-use workflow templates for teams. Engineering, operations, product, and business."><meta property="og:url" content="https://roadwork.blackroad.io/workflows"><meta property="og:image" content="https://images.blackroad.io/pixel-art/road-logo.png"><meta name="twitter:card" content="summary_large_image"><link rel="canonical" href="https://roadwork.blackroad.io/workflows"><script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"Workflow Templates","url":"https://roadwork.blackroad.io/workflows","description":"20+ workflow templates for engineering, operations, product, and business teams.","publisher":{"@type":"Organization","name":"BlackRoad OS, Inc."}}</script><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet"><style>*{margin:0;padding:0;box-sizing:border-box}body{background:#000;color:#f5f5f5;font-family:'Space Grotesk',sans-serif}a{color:inherit}a:hover{border-color:#333 !important}.bar{height:3px;background:linear-gradient(90deg,#FF6B2B,#FF2255,#CC00AA,#8844FF,#4488FF,#00D4FF);position:fixed;top:0;left:0;right:0;z-index:1000}nav{position:fixed;top:3px;left:0;right:0;z-index:999;background:rgba(0,0,0,.92);backdrop-filter:blur(20px);border-bottom:1px solid #1a1a1a;height:48px;display:flex;align-items:center;padding:0 24px;gap:16px}nav a{font-size:12px;color:#737373}nav a:hover{color:#f5f5f5}.container{max-width:960px;margin:0 auto;padding:80px 24px 48px}</style></head><body><div class="bar"></div><nav><a href="/" style="font-weight:700;font-size:15px;color:#f5f5f5">RoadWork</a><a href="/workflows" style="color:#f5f5f5">Workflows</a><a href="https://blackroad.io">Highway</a><a href="https://app.blackroad.io" style="padding:6px 14px;border-radius:5px;background:#f5f5f5;color:#000;font-weight:600;font-size:11px">Open OS</a></nav><div class="container"><h1 style="font-size:clamp(24px,5vw,40px);font-weight:700;margin-bottom:8px">Workflow Templates</h1><p style="color:#737373;margin-bottom:32px;max-width:600px;line-height:1.6">Ready-to-use workflows for your team. Pick a template, customize the steps, and let your business run itself.</p>${listing}</div></body></html>`;
+      return new Response(pageHtml, { headers: { 'Content-Type': 'text/html;charset=UTF-8' } });
+    }
+
+    const wfMatch = path.match(/^\/workflows\/([a-z0-9-]+)$/);
+    if (wfMatch) {
+      const wf = RW_WORKFLOWS.find(w => w.slug === wfMatch[1]);
+      if (!wf) return new Response('Workflow not found', { status: 404 });
+      const related = RW_WORKFLOWS.filter(w => wf.related.includes(w.slug)).slice(0, 4);
+      const wfHtml = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${wf.name} Workflow - RoadWork by BlackRoad OS</title><meta name="description" content="${wf.description}"><meta property="og:title" content="${wf.name} Workflow - RoadWork"><meta property="og:description" content="${wf.description}"><meta property="og:url" content="https://roadwork.blackroad.io/workflows/${wf.slug}"><meta property="og:image" content="https://images.blackroad.io/pixel-art/road-logo.png"><meta name="twitter:card" content="summary"><link rel="canonical" href="https://roadwork.blackroad.io/workflows/${wf.slug}"><script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"${wf.name}","description":"${wf.description}","step":${JSON.stringify(wf.steps.map((s,i) => ({"@type":"HowToStep","position":i+1,"text":s})))},"publisher":{"@type":"Organization","name":"BlackRoad OS, Inc."}}</script><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet"><style>*{margin:0;padding:0;box-sizing:border-box}body{background:#000;color:#f5f5f5;font-family:'Space Grotesk',sans-serif}a{color:inherit}.bar{height:3px;background:linear-gradient(90deg,#FF6B2B,#FF2255,#CC00AA,#8844FF,#4488FF,#00D4FF);position:fixed;top:0;left:0;right:0;z-index:1000}nav{position:fixed;top:3px;left:0;right:0;z-index:999;background:rgba(0,0,0,.92);backdrop-filter:blur(20px);border-bottom:1px solid #1a1a1a;height:48px;display:flex;align-items:center;padding:0 24px;gap:16px}nav a{font-size:12px;color:#737373}nav a:hover{color:#f5f5f5}.container{max-width:720px;margin:0 auto;padding:80px 24px 48px}</style></head><body><div class="bar"></div><nav><a href="/" style="font-weight:700;font-size:15px;color:#f5f5f5">RoadWork</a><a href="/workflows" style="color:#f5f5f5">Workflows</a><a href="https://blackroad.io">Highway</a><a href="https://app.blackroad.io" style="padding:6px 14px;border-radius:5px;background:#f5f5f5;color:#000;font-weight:600;font-size:11px">Open OS</a></nav><div class="container"><a href="/workflows" style="font-size:12px;color:#737373;display:inline-block;margin-bottom:16px">&larr; All Workflows</a><div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px"><h1 style="font-size:28px;font-weight:700">${wf.name}</h1>${wf.roles.map(r => `<span style="font-size:11px;padding:3px 10px;border-radius:10px;background:#FF6B2B22;color:#FF6B2B;font-family:'JetBrains Mono',monospace">${r}</span>`).join('')}${wf.automatable ? '<span style="font-size:11px;padding:3px 10px;border-radius:10px;background:#22c55e22;color:#22c55e">Automatable</span>' : '<span style="font-size:11px;padding:3px 10px;border-radius:10px;background:#f5a62322;color:#f5a623">Manual</span>'}<span style="font-size:11px;padding:3px 10px;border-radius:10px;background:#4488ff22;color:#4488ff">${wf.category}</span></div><p style="font-size:15px;color:#737373;line-height:1.6;margin-bottom:24px">${wf.description}</p><h2 style="font-size:16px;margin-bottom:12px">Steps</h2><ol style="list-style:none;counter-reset:step;margin-bottom:24px">${wf.steps.map((s,i) => `<li style="padding:12px 0;font-size:14px;color:#ccc;line-height:1.5;border-bottom:1px solid #1a1a1a;display:flex;align-items:flex-start;gap:12px"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#FF6B2B;font-weight:700;min-width:24px">${i+1}</span>${s}</li>`).join('')}</ol><a href="https://app.blackroad.io" style="display:inline-block;margin-top:16px;padding:12px 28px;border-radius:7px;background:#f5f5f5;color:#000;font-weight:600;font-size:14px;text-decoration:none">Use in RoadWork</a>${related.length ? `<div style="margin-top:48px;border-top:1px solid #1a1a1a;padding-top:24px"><h2 style="font-size:16px;margin-bottom:12px">Related Workflows</h2><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px">${related.map(r => `<a href="/workflows/${r.slug}" style="display:block;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:8px;padding:12px;text-decoration:none"><div style="font-size:13px;font-weight:600;color:#f5f5f5;margin-bottom:4px">${r.name}</div><div style="font-size:11px;color:#737373">${r.category} &middot; ${r.steps.length} steps</div></a>`).join('')}</div></div>` : ''}</div></body></html>`;
+      return new Response(wfHtml, { headers: { 'Content-Type': 'text/html;charset=UTF-8' } });
+    }
 
     // Health
     if ((path === '/health' || path === '/api/health') && method === 'GET') {
@@ -2857,7 +2947,7 @@ ${pricing.map(p => `<tr><td>${p.description || ''}</td><td class="text-right">${
 </tbody></table><div class="total">Total: $${(prop.total_value || 0).toFixed(2)}</div>` : `<div class="total">Total Value: $${(prop.total_value || 0).toFixed(2)}</div>`}
 ${prop.notes ? '<h2>Notes</h2><p>'+prop.notes+'</p>' : ''}
 <div class="sig"><h3>Acceptance</h3>${prop.signature_client ? '<p>Signed by: <strong>'+prop.signature_client+'</strong> on '+prop.signature_date+'</p>' : '<p>Client Signature: <span class="sig-line"></span></p><p>Date: <span class="sig-line"></span></p>'}</div>
-<div class="footer"><p>BlackRoad OS, Inc. | blackroad.io | Remember the Road. Pave Tomorrow.</p></div></div></body></html>`;
+</body></html>`;
 
       return html(proposalHTML);
     }
@@ -3586,6 +3676,65 @@ ${prop.notes ? '<h2>Notes</h2><p>'+prop.notes+'</p>' : ''}
       });
       const avgAccuracy = results.length > 0 ? Math.round(results.reduce((s, r) => s + r.revenue_accuracy, 0) / results.length) : null;
       return json({ comparisons: results, avg_accuracy: avgAccuracy, periods_analyzed: results.length });
+    }
+
+    // --- Enhanced: Workflow runs ---
+    const wfRunMatch = path.match(/^\/api\/workflows\/([^/]+)\/run$/);
+    if (wfRunMatch && method === 'POST') {
+      await env.DB.prepare("CREATE TABLE IF NOT EXISTS rw_runs (id TEXT PRIMARY KEY, workflow_id TEXT, status TEXT DEFAULT 'running', started_at TEXT DEFAULT (datetime('now')), completed_at TEXT, result TEXT, error TEXT)").run();
+      const id = crypto.randomUUID().slice(0,12);
+      await env.DB.prepare("INSERT INTO rw_runs (id,workflow_id) VALUES (?,?)").bind(id,wfRunMatch[1]).run();
+      // Increment runs on workflow
+      try { await env.DB.prepare('UPDATE rw_workflows SET runs = COALESCE(runs,0) + 1, last_run = datetime(\'now\') WHERE id = ?').bind(wfRunMatch[1]).run(); } catch{}
+      return json({ok:true,run_id:id,workflow_id:wfRunMatch[1],status:'running'});
+    }
+    const wfRunsMatch = path.match(/^\/api\/workflows\/([^/]+)\/runs$/);
+    if (wfRunsMatch && method === 'GET') {
+      try { await env.DB.prepare("CREATE TABLE IF NOT EXISTS rw_runs (id TEXT PRIMARY KEY, workflow_id TEXT, status TEXT DEFAULT 'running', started_at TEXT DEFAULT (datetime('now')), completed_at TEXT, result TEXT, error TEXT)").run(); } catch{}
+      const rows = await env.DB.prepare('SELECT * FROM rw_runs WHERE workflow_id = ? ORDER BY started_at DESC LIMIT 20').bind(wfRunsMatch[1]).all();
+      return json({runs:rows.results});
+    }
+
+    // --- Enhanced: Task queue ---
+    if (path === '/api/queue' && method === 'POST') {
+      await env.DB.prepare("CREATE TABLE IF NOT EXISTS rw_queue (id TEXT PRIMARY KEY, title TEXT, description TEXT, status TEXT DEFAULT 'pending', priority TEXT DEFAULT 'normal', assignee TEXT, due_date TEXT, tags TEXT DEFAULT '[]', created_at TEXT DEFAULT (datetime('now')), completed_at TEXT)").run();
+      const body = await request.json();
+      const id = crypto.randomUUID().slice(0,12);
+      await env.DB.prepare("INSERT INTO rw_queue (id,title,description,priority,assignee,due_date,tags) VALUES (?,?,?,?,?,?,?)").bind(id,body.title||'',body.description||'',body.priority||'normal',body.assignee||'',body.due_date||'',JSON.stringify(body.tags||[])).run();
+      return json({ok:true,id},201);
+    }
+    if (path === '/api/queue' && method === 'GET') {
+      try { await env.DB.prepare("CREATE TABLE IF NOT EXISTS rw_queue (id TEXT PRIMARY KEY, title TEXT, description TEXT, status TEXT DEFAULT 'pending', priority TEXT DEFAULT 'normal', assignee TEXT, due_date TEXT, tags TEXT DEFAULT '[]', created_at TEXT DEFAULT (datetime('now')), completed_at TEXT)").run(); } catch{}
+      const status = url.searchParams.get('status');
+      let q = 'SELECT * FROM rw_queue'; const b = [];
+      if (status) { q += ' WHERE status = ?'; b.push(status); }
+      q += ' ORDER BY created_at DESC LIMIT 50';
+      const rows = await env.DB.prepare(q).bind(...b).all();
+      return json({tasks:rows.results});
+    }
+
+    // --- Enhanced: Automation rules ---
+    if (path === '/api/rules' && method === 'POST') {
+      await env.DB.prepare("CREATE TABLE IF NOT EXISTS rw_rules (id TEXT PRIMARY KEY, name TEXT, trigger_event TEXT, condition TEXT, action TEXT, enabled INTEGER DEFAULT 1, runs INTEGER DEFAULT 0, created_at TEXT DEFAULT (datetime('now')))").run();
+      const body = await request.json();
+      const id = crypto.randomUUID().slice(0,12);
+      await env.DB.prepare("INSERT INTO rw_rules (id,name,trigger_event,condition,action) VALUES (?,?,?,?,?)").bind(id,body.name||'',body.trigger||'',body.condition||'',body.action||'').run();
+      return json({ok:true,id},201);
+    }
+    if (path === '/api/rules' && method === 'GET') {
+      try { await env.DB.prepare("CREATE TABLE IF NOT EXISTS rw_rules (id TEXT PRIMARY KEY, name TEXT, trigger_event TEXT, condition TEXT, action TEXT, enabled INTEGER DEFAULT 1, runs INTEGER DEFAULT 0, created_at TEXT DEFAULT (datetime('now')))").run(); } catch{}
+      const rows = await env.DB.prepare('SELECT * FROM rw_rules ORDER BY created_at DESC').all();
+      return json({rules:rows.results});
+    }
+
+    // --- Enhanced: Dashboard stats ---
+    if (path === '/api/dashboard/summary' && method === 'GET') {
+      const res = {};
+      try { const t = await env.DB.prepare("SELECT status, COUNT(*) as cnt FROM rw_queue GROUP BY status").all(); res.tasks_by_status = (t.results||[]).reduce((a,r)=>{a[r.status]=r.cnt;return a;},{}); } catch{ res.tasks_by_status = {}; }
+      try { const w = await env.DB.prepare("SELECT COUNT(*) as cnt FROM rw_workflows WHERE status = 'active' OR status IS NULL").first(); res.active_workflows = w?.cnt||0; } catch{ res.active_workflows = 0; }
+      try { const r = await env.DB.prepare("SELECT * FROM rw_runs ORDER BY started_at DESC LIMIT 5").all(); res.recent_runs = r.results; } catch{ res.recent_runs = []; }
+      try { const i = await env.DB.prepare("SELECT SUM(total) as pending_total FROM rw_invoices WHERE status = 'draft' OR status = 'sent'").first(); res.pending_invoices_total = i?.pending_total||0; } catch{ res.pending_invoices_total = 0; }
+      return json(res);
     }
 
     return json({ error: 'Not found', service: 'roadwork' }, 404);

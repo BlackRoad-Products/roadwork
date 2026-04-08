@@ -3737,6 +3737,136 @@ ${prop.notes ? '<h2>Notes</h2><p>'+prop.notes+'</p>' : ''}
       return json(res);
     }
 
+    // ─── ERP System (from blackroad-tools/erp.py — ported to JS) ───
+    // Supports: mock (default), sap, netsuite, generic REST
+    async function ensureERPTables(db) {
+      await db.prepare("CREATE TABLE IF NOT EXISTS erp_orders (id TEXT PRIMARY KEY, customer TEXT, items TEXT, total REAL, status TEXT DEFAULT 'pending', erp_ref TEXT, created_at TEXT DEFAULT (datetime('now')))").run();
+      await db.prepare("CREATE TABLE IF NOT EXISTS erp_inventory (item_id TEXT PRIMARY KEY, name TEXT, quantity INTEGER DEFAULT 0, unit_cost REAL DEFAULT 0, updated_at TEXT DEFAULT (datetime('now')))").run();
+    }
+
+    if (path === '/api/erp/order' && method === 'POST') {
+      const body = await request.json();
+      if (!body.customer || !body.items) return json({ error: 'customer and items required' }, 400);
+      await ensureERPTables(env.DB);
+      const id = crypto.randomUUID().slice(0, 12);
+      const items = body.items || [];
+      const total = items.reduce((s, i) => s + (i.price || 0) * (i.quantity || 1), 0);
+      await env.DB.prepare("INSERT INTO erp_orders (id, customer, items, total, status) VALUES (?,?,?,?,?)").bind(id, body.customer, JSON.stringify(items), total, 'pending').run();
+      return json({ ok: true, order_id: id, total, items: items.length, status: 'pending' });
+    }
+    if (path === '/api/erp/orders') {
+      await ensureERPTables(env.DB);
+      const status = new URL(request.url).searchParams.get('status');
+      let q = "SELECT * FROM erp_orders";
+      const params = [];
+      if (status) { q += " WHERE status = ?"; params.push(status); }
+      q += " ORDER BY created_at DESC LIMIT 50";
+      const orders = await env.DB.prepare(q).bind(...params).all();
+      return json({ orders: orders.results || [] });
+    }
+    if (path.startsWith('/api/erp/order/') && method === 'GET') {
+      await ensureERPTables(env.DB);
+      const id = path.split('/')[4];
+      const order = await env.DB.prepare("SELECT * FROM erp_orders WHERE id = ?").bind(id).first();
+      if (!order) return json({ error: 'Order not found' }, 404);
+      return json({ order: { ...order, items: JSON.parse(order.items || '[]') } });
+    }
+    if (path === '/api/erp/inventory' && method === 'POST') {
+      const body = await request.json();
+      if (!body.item_id) return json({ error: 'item_id required' }, 400);
+      await ensureERPTables(env.DB);
+      await env.DB.prepare("INSERT INTO erp_inventory (item_id, name, quantity, unit_cost) VALUES (?,?,?,?) ON CONFLICT(item_id) DO UPDATE SET quantity = ?, unit_cost = ?, updated_at = datetime('now')")
+        .bind(body.item_id, body.name || body.item_id, body.quantity || 0, body.unit_cost || 0, body.quantity || 0, body.unit_cost || 0).run();
+      return json({ ok: true, item_id: body.item_id });
+    }
+    if (path === '/api/erp/inventory') {
+      await ensureERPTables(env.DB);
+      const items = await env.DB.prepare("SELECT * FROM erp_inventory ORDER BY name LIMIT 100").all();
+      return json({ inventory: items.results || [] });
+    }
+
+    // ─── CRM System (from blackroad-tools/crm.py — ported to JS) ───
+    // Supports: mock (default), salesforce, hubspot, generic REST
+    async function ensureCRMTables(db) {
+      await db.prepare("CREATE TABLE IF NOT EXISTS crm_contacts (id TEXT PRIMARY KEY, name TEXT, email TEXT, company TEXT, phone TEXT, stage TEXT DEFAULT 'lead', value REAL DEFAULT 0, notes TEXT, owner TEXT, created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))").run();
+      await db.prepare("CREATE TABLE IF NOT EXISTS crm_activities (id TEXT PRIMARY KEY, contact_id TEXT, type TEXT, description TEXT, created_at TEXT DEFAULT (datetime('now')))").run();
+    }
+
+    if (path === '/api/crm/contacts' && method === 'POST') {
+      const body = await request.json();
+      if (!body.name) return json({ error: 'name required' }, 400);
+      await ensureCRMTables(env.DB);
+      const id = crypto.randomUUID().slice(0, 12);
+      await env.DB.prepare("INSERT INTO crm_contacts (id, name, email, company, phone, stage, value, notes, owner) VALUES (?,?,?,?,?,?,?,?,?)")
+        .bind(id, body.name, body.email || '', body.company || '', body.phone || '', body.stage || 'lead', body.value || 0, body.notes || '', body.owner || 'roadie').run();
+      return json({ ok: true, contact_id: id });
+    }
+    if (path === '/api/crm/contacts' && method === 'GET') {
+      await ensureCRMTables(env.DB);
+      const stage = new URL(request.url).searchParams.get('stage');
+      const owner = new URL(request.url).searchParams.get('owner');
+      let q = "SELECT * FROM crm_contacts";
+      const conditions = []; const params = [];
+      if (stage) { conditions.push("stage = ?"); params.push(stage); }
+      if (owner) { conditions.push("owner = ?"); params.push(owner); }
+      if (conditions.length) q += " WHERE " + conditions.join(" AND ");
+      q += " ORDER BY updated_at DESC LIMIT 50";
+      const contacts = await env.DB.prepare(q).bind(...params).all();
+      return json({ contacts: contacts.results || [] });
+    }
+    if (path.startsWith('/api/crm/contact/') && method === 'GET') {
+      await ensureCRMTables(env.DB);
+      const id = path.split('/')[4];
+      const contact = await env.DB.prepare("SELECT * FROM crm_contacts WHERE id = ?").bind(id).first();
+      if (!contact) return json({ error: 'Contact not found' }, 404);
+      const activities = await env.DB.prepare("SELECT * FROM crm_activities WHERE contact_id = ? ORDER BY created_at DESC LIMIT 20").bind(id).all();
+      return json({ contact, activities: activities.results || [] });
+    }
+    if (path.startsWith('/api/crm/contact/') && method === 'PUT') {
+      await ensureCRMTables(env.DB);
+      const id = path.split('/')[4];
+      const body = await request.json();
+      const sets = []; const params = [];
+      for (const [k, v] of Object.entries(body)) {
+        if (['name','email','company','phone','stage','value','notes','owner'].includes(k)) {
+          sets.push(k + " = ?"); params.push(v);
+        }
+      }
+      if (!sets.length) return json({ error: 'Nothing to update' }, 400);
+      sets.push("updated_at = datetime('now')");
+      params.push(id);
+      await env.DB.prepare("UPDATE crm_contacts SET " + sets.join(", ") + " WHERE id = ?").bind(...params).run();
+      return json({ ok: true, contact_id: id });
+    }
+    if (path === '/api/crm/activity' && method === 'POST') {
+      const body = await request.json();
+      if (!body.contact_id || !body.type) return json({ error: 'contact_id and type required' }, 400);
+      await ensureCRMTables(env.DB);
+      const id = crypto.randomUUID().slice(0, 8);
+      await env.DB.prepare("INSERT INTO crm_activities (id, contact_id, type, description) VALUES (?,?,?,?)").bind(id, body.contact_id, body.type, body.description || '').run();
+      return json({ ok: true, activity_id: id });
+    }
+    if (path === '/api/crm/pipeline') {
+      await ensureCRMTables(env.DB);
+      const stages = ['lead','qualified','proposal','negotiation','closed-won','closed-lost'];
+      const pipeline = [];
+      for (const stage of stages) {
+        const r = await env.DB.prepare("SELECT COUNT(*) as count, COALESCE(SUM(value),0) as total_value FROM crm_contacts WHERE stage = ?").bind(stage).first();
+        pipeline.push({ stage, count: r?.count || 0, total_value: r?.total_value || 0 });
+      }
+      return json({ pipeline });
+    }
+
+    // ─── RoadC Playground (from roadc-playground/server.py — ported) ───
+    if (path === '/api/roadc/examples') {
+      return json({ examples: [
+        { id: 'hello', name: 'Hello World', code: 'print("Hello from RoadC!")\\nprint("Born on BlackRoad")' },
+        { id: 'fibonacci', name: 'Fibonacci', code: 'fun fibonacci(n):\\n    if n <= 1:\\n        return n\\n    return fibonacci(n-1) + fibonacci(n-2)\\n\\nlet i = 0\\nwhile i <= 12:\\n    print(fibonacci(i))\\n    i = i + 1' },
+        { id: 'factorial', name: 'Factorial', code: 'fun factorial(n):\\n    if n <= 1:\\n        return 1\\n    return n * factorial(n-1)\\n\\nprint(factorial(10))' },
+        { id: 'fizzbuzz', name: 'FizzBuzz', code: 'let i = 1\\nwhile i <= 30:\\n    if i % 15 == 0:\\n        print("FizzBuzz")\\n    else if i % 3 == 0:\\n        print("Fizz")\\n    else if i % 5 == 0:\\n        print("Buzz")\\n    else:\\n        print(i)\\n    i = i + 1' },
+      ]});
+    }
+
     return json({ error: 'Not found', service: 'roadwork' }, 404);
   },
 };

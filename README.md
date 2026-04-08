@@ -1,67 +1,45 @@
 # RoadWork
 
-*Construction ahead. Your business builds itself.*
+> **BUSINESS OPS** — Part of [BlackRoad OS](https://os.blackroad.io)
 
-Complete company automation suite powered by 7 specialized agents that run your business while you steer.
-
-## The Ride
-
-Build at RoadWork. The construction zone. Your business runs itself — invoices, emails, scheduling, customer replies, marketing, operations. You set the destination. RoadWork paves the road while you steer.
-
-## What It Does
-
-Business automation with 7 named AI agents handling finance, support, marketing, operations, legal, analytics, and strategy. They collaborate via CarPool, pull context from RoadTrip memory, stamp every action on RoadChain, and earn RoadCoin for completed work.
-
-## Integrations
-
-| Service | Role |
-|---------|------|
-| **Cloudflare Workers** | Business automation runtime |
-| **Cloudflare D1** | Task queues, agent state, business data |
-| **Stripe** | Invoicing, payment processing, subscriptions |
-| **Salesforce** | CRM webhook integration — account/contact sync |
-| **Linear** | Issue tracking and project management |
-| **Jira** | Enterprise issue tracking |
-| **Notion** | Workspace docs and database queries |
-| **Slack** | Team notifications and alerts |
-| **SendGrid** | Transactional email — invoices, receipts, alerts |
-| **Twilio** | SMS notifications for urgent business events |
-| **Zapier / Make** | Third-party automation workflow triggers |
-| **RoadChain** | Every decision and action stamped on the ledger |
-| **RoadCoin** | Agents earn ROAD collectively for completed tasks |
-
-## The 7 Agents
-
-| Agent | Role | Key Integrations |
-|-------|------|-----------------|
-| **Odysseus the Foreman** | Finance + Invoicing | Stripe, RoadChain |
-| **Support Scout** | Customer Support | SendGrid, Slack, RoadTrip memory |
-| **Market Maverick** | Marketing + Sales | BackRoad, BlackBoard |
-| **Ops Overseer** | Operations + Scheduling | Linear, Jira |
-| **Legal Lookout** | Compliance + Contracts | RoadChain verified approvals |
-| **Analytics Atlas** | Insights + KPIs | RoadChain data, RoadView |
-| **Growth Guide** | Strategy + Scaling | RoadTrip, all agents |
-
-## Features
-
-- 7 specialized agents that collaborate in real time
-- Auto-generated invoices, payment reminders, tax-ready reports
-- Customer support automation with human escalation
-- Campaign creation via BackRoad + BlackBoard
-- Calendar, onboarding/offboarding, expense approvals
-- Contract review and compliance checking
-- Live KPI dashboard with AI recommendations
-- Every action RoadChain-stamped for auditable proof
-- You stay in the driver's seat — approve high-value actions with one tap
-
-## Status
-
-**LIVE** | [roadwork.blackroad.io](https://roadwork.blackroad.io)
-
-## How It Powers The BlackRoad
-
-RoadWork is the construction crew that never sleeps. While you steer the vision, the 7 agents build the business behind you.
+[![Live](https://img.shields.io/badge/status-LIVE-brightgreen?style=flat-square)](https://roadwork.blackroad.io)
+[![BlackRoad OS](https://img.shields.io/badge/BlackRoad_OS-18_products-black?style=flat-square)](https://os.blackroad.io)
+[![Agent](https://img.shields.io/badge/agent-Octavia-8844FF?style=flat-square)](https://roadtrip.blackroad.io)
 
 ---
 
-Part of [BlackRoad OS](https://blackroad.io) — Remember the Road. Pave Tomorrow.
+## AI business operations. Octavia manages every task, sprint, and project with machine precision.
+
+**Live at:** [roadwork.blackroad.io](https://roadwork.blackroad.io)  
+**Your agent:** Octavia  
+**Tag:** AI Business Operations
+
+---
+
+## Connected Products
+
+| Product | URL |
+|---------|-----|
+| [BlackRoad OS](https://os.blackroad.io) | os.blackroad.io |
+| [RoadTrip](https://roadtrip.blackroad.io) | roadtrip.blackroad.io |
+| [RoadCoin](https://roadcoin.blackroad.io) | roadcoin.blackroad.io |
+| [RoadCode](https://roadcode.blackroad.io) | roadcode.blackroad.io |
+
+---
+
+## The Highway
+
+BlackRoad OS is a sovereign AI operating system — 18 products, 27 agents, one persistent tab.
+
+| | | |
+|---|---|---|
+| [BlackRoad OS](https://os.blackroad.io) | [RoadTrip](https://roadtrip.blackroad.io) | [Roadie](https://roadie.blackroad.io) |
+| [RoadView](https://roadview.blackroad.io) | [RoadWork](https://roadwork.blackroad.io) | [RoadCode](https://roadcode.blackroad.io) |
+| [RoadBook](https://roadbook.blackroad.io) | [RoadChain](https://roadchain.blackroad.io) | [RoadCoin](https://roadcoin.blackroad.io) |
+| [BackRoad](https://backroad.blackroad.io) | [BlackBoard](https://blackboard.blackroad.io) | [CarKeys](https://carkeys.blackroad.io) |
+| [CarPool](https://carpool.blackroad.io) | [OfficeRoad](https://officeroad.blackroad.io) | [OneWay](https://oneway.blackroad.io) |
+| [RoadSide](https://roadside.blackroad.io) | [RoadWorld](https://roadworld.blackroad.io) | [Highway](https://highway.blackroad.io) |
+
+---
+
+> *Remember the Road. Pave Tomorrow.* — [BlackRoad OS, Inc.](https://os.blackroad.io)

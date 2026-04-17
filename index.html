@@ -1,399 +1,458 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RoadWork — Business Ops — BlackRoad OS</title>
-<meta name="description" content="Octavia manages the queue. Every project, task, and sprint — orchestrated with machine precision.">
-<meta property="og:title" content="RoadWork — BlackRoad OS">
-<meta property="og:description" content="Octavia manages the queue. Every project, task, and sprint — orchestrated with machine precision.">
-<meta property="og:url" content="https://roadwork.blackroad.io">
-<meta property="og:type" content="website">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{--g:linear-gradient(90deg,#FF6B2B,#FF2255,#CC00AA,#8844FF,#4488FF,#00D4FF);--g135:linear-gradient(135deg,#FF6B2B,#FF2255,#CC00AA,#8844FF,#4488FF,#00D4FF);--bg:#000;--card:#0a0a0a;--elevated:#111;--hover:#181818;--border:#1a1a1a;--muted:#444;--sub:#737373;--text:#f5f5f5;--white:#fff;--sg:'Space Grotesk',sans-serif;--jb:'JetBrains Mono',monospace}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:var(--sg);line-height:1.6;overflow-x:hidden}
-::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:#000}::-webkit-scrollbar-thumb{background:#1a1a1a;border-radius:2px}
-a{color:var(--text);text-decoration:none}
-button{font-family:var(--sg);cursor:pointer}
-img{max-width:100%}
-.grad-bar{height:3px;background:var(--g)}
-.container{max-width:1000px;width:100%;margin:0 auto;padding:0 24px}
-.section{padding:72px 0}
-.section-num{font-family:var(--jb);font-size:10px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}
-.section-title{font-weight:700;font-size:28px;color:var(--white);margin-bottom:8px}
-.section-desc{font-size:14px;color:var(--sub);max-width:460px;line-height:1.7}
-.divider{height:1px;background:var(--border)}
-nav{position:fixed;top:3px;left:0;right:0;z-index:100;padding:0 24px}
-.nav-inner{max-width:1000px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:rgba(0,0,0,.9);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:10px}
-.nav-logo{font-weight:700;font-size:16px;color:var(--white);display:flex;align-items:center;gap:10px}
-.nav-logo-bar{width:20px;height:3px;border-radius:2px;background:var(--g)}
-.nav-links{display:flex;gap:24px}
-.nav-links a{font-size:12px;font-weight:500;color:var(--sub);transition:color .15s}
-.nav-links a:hover{color:var(--white)}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;border-radius:6px;font-weight:600;font-size:12px;border:none;transition:all .15s}
-.btn-white{background:var(--white);color:#000}
-.btn-white:hover{background:#e0e0e0}
-.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text)}
-.btn-outline:hover{border-color:#444}
-.btn-lg{padding:13px 32px;font-size:14px;border-radius:8px}
-.hero{min-height:92vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px;position:relative}
-.hero-tag{font-family:var(--jb);font-size:10px;color:var(--sub);letter-spacing:.15em;text-transform:uppercase;margin-bottom:28px;display:flex;align-items:center;gap:8px}
-.hero-dot{width:5px;height:5px;border-radius:50%;background:var(--white);animation:pulse 2.5s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.hero-title{font-size:clamp(44px,8vw,84px);font-weight:700;line-height:.92;color:var(--white);letter-spacing:-.04em;margin-bottom:20px}
-.hero-sub{font-size:clamp(14px,1.8vw,17px);color:var(--sub);max-width:500px;margin:0 auto 40px;line-height:1.7}
-.hero-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
-.hero-stats{display:flex;gap:48px;margin-top:72px;flex-wrap:wrap;justify-content:center}
-.hero-stat{text-align:center}
-.hero-stat-n{font-size:26px;font-weight:700;color:var(--white);font-family:var(--jb)}
-.hero-stat-l{font-size:9px;color:var(--muted);font-family:var(--jb);text-transform:uppercase;letter-spacing:.1em;margin-top:2px}
-.feat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-top:36px}
-.feat{background:var(--card);padding:24px;transition:background .15s}
-.feat:hover{background:var(--elevated)}
-.feat-icon{font-size:20px;margin-bottom:12px}
-.feat-title{font-weight:600;font-size:14px;color:var(--white);margin-bottom:6px}
-.feat-text{font-size:12px;color:var(--sub);line-height:1.7}
-.agent-section{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:28px;margin-top:36px;display:flex;gap:24px;align-items:flex-start}
-.agent-avatar{width:56px;height:56px;border-radius:50%;background:var(--g135);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#000;flex-shrink:0;font-family:var(--sg)}
-.agent-info{flex:1}
-.agent-name-lg{font-size:18px;font-weight:700;color:var(--white);margin-bottom:3px}
-.agent-role-lg{font-family:var(--jb);font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
-.agent-bio{font-size:13px;color:var(--sub);line-height:1.7;margin-bottom:14px}
-.agent-status{display:flex;align-items:center;gap:7px;font-family:var(--jb);font-size:10px;color:var(--muted)}
-.status-dot{width:6px;height:6px;border-radius:50%;background:var(--muted)}
-.status-dot.on{background:#22d3ee}
-.steps-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-top:36px}
-.step{background:var(--card);padding:28px 24px}
-.step-n{font-family:var(--jb);font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
-.step-title{font-weight:600;font-size:15px;color:var(--white);margin-bottom:8px}
-.step-text{font-size:12px;color:var(--sub);line-height:1.7}
-.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:36px}
-.price-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:28px 22px;text-align:center}
-.price-card.featured{border-color:#222}
-.price-grad{height:3px;background:var(--g);margin:-28px -22px 24px;border-radius:10px 10px 0 0}
-.price-name{font-family:var(--jb);font-size:9px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px}
-.price-val{font-size:36px;font-weight:700;color:var(--white);line-height:1}
-.price-period{font-size:11px;color:var(--muted);margin-bottom:20px;margin-top:3px}
-.price-list{list-style:none;text-align:left;margin-bottom:24px}
-.price-list li{font-size:12px;color:var(--sub);padding:7px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
-.price-list li:last-child{border-bottom:none}
-.price-check{width:12px;height:2px;border-radius:1px;background:var(--g);flex-shrink:0}
-.connected-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:6px;margin-top:28px}
-.connected{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px;transition:border-color .15s;display:block}
-.connected:hover{border-color:#333}
-.connected-name{font-weight:600;font-size:13px;color:var(--white);margin-bottom:3px}
-.connected-line{font-size:11px;color:var(--sub)}
-.connected-url{font-family:var(--jb);font-size:9px;color:var(--muted);margin-top:8px}
-footer{border-top:1px solid var(--border);padding:40px 0}
-.footer-inner{max-width:1000px;margin:0 auto;padding:0 24px}
-.footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:32px;margin-bottom:32px}
-.footer-brand{font-weight:700;font-size:15px;color:var(--white);margin-bottom:6px;display:flex;align-items:center;gap:8px}
-.footer-brand-bar{width:16px;height:3px;border-radius:2px;background:var(--g)}
-.footer-tagline{font-family:var(--jb);font-size:9px;color:var(--muted);letter-spacing:.1em}
-.footer-col h4{font-family:var(--jb);font-size:9px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px}
-.footer-col a{display:block;font-size:12px;color:var(--sub);padding:3px 0;transition:color .15s}
-.footer-col a:hover{color:var(--white)}
-.footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:20px;border-top:1px solid var(--border);flex-wrap:wrap;gap:12px}
-.footer-copy{font-family:var(--jb);font-size:9px;color:var(--muted)}
-#br-chat-fab{position:fixed;bottom:24px;right:24px;z-index:9999;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#FF6B2B,#FF2255,#CC00AA,#8844FF);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(255,107,43,.4);transition:transform .2s}
-#br-chat-fab:hover{transform:scale(1.1)}
-#br-chat-fab svg{width:22px;height:22px;fill:#fff}
-#br-chat-panel{position:fixed;bottom:88px;right:24px;z-index:9998;width:330px;max-height:500px;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:14px;display:none;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.8);overflow:hidden}
-#br-chat-panel.open{display:flex}
-#br-chat-head{padding:12px 14px;background:#111;border-bottom:1px solid #1a1a1a;display:flex;align-items:center;gap:10px}
-#br-chat-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#FF6B2B,#8844FF);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;font-family:'Space Grotesk',sans-serif;flex-shrink:0}
-#br-chat-info{flex:1;min-width:0}
-#br-chat-nm{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;color:#f5f5f5}
-#br-chat-rl{font-family:'JetBrains Mono',monospace;font-size:9px;color:#737373;margin-top:1px}
-#br-chat-st{display:flex;align-items:center;gap:5px;margin-top:2px}
-.br-sdot{width:6px;height:6px;border-radius:50%;background:#444}
-.br-sdot.on{background:#22d3ee}
-#br-chat-sl{font-size:9px;color:#737373;font-family:'JetBrains Mono',monospace}
-#br-chat-x{background:none;border:none;color:#737373;font-size:16px;cursor:pointer;padding:0}
-#br-chat-msgs{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:8px;min-height:180px}
-#br-chat-msgs::-webkit-scrollbar{width:3px}
-#br-chat-msgs::-webkit-scrollbar-thumb{background:#1a1a1a;border-radius:2px}
-.br-msg{max-width:85%;padding:7px 11px;border-radius:10px;font-size:12px;line-height:1.5;font-family:'Space Grotesk',sans-serif}
-.br-msg.user{align-self:flex-end;background:linear-gradient(135deg,rgba(255,107,43,.15),rgba(136,68,255,.15));border:1px solid rgba(136,68,255,.3);color:#f5f5f5}
-.br-msg.agent{align-self:flex-start;background:#111;border:1px solid #1a1a1a;color:#d4d4d4}
-.br-msg.think{align-self:flex-start;background:#0a0a0a;border:1px solid #1a1a1a;color:#444;font-style:italic;font-family:'JetBrains Mono',monospace;font-size:10px}
-#br-chat-intro{padding:8px 10px;font-size:11px;color:#737373;font-family:'JetBrains Mono',monospace;text-align:center;line-height:1.5}
-#br-chat-row{padding:8px 10px;background:#111;border-top:1px solid #1a1a1a;display:flex;gap:7px}
-#br-chat-in{flex:1;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:7px;padding:7px 10px;font-size:12px;color:#f5f5f5;font-family:'Space Grotesk',sans-serif;outline:none;resize:none;height:36px;line-height:1.4}
-#br-chat-in:focus{border-color:rgba(136,68,255,.4)}
-#br-chat-go{background:linear-gradient(135deg,#FF2255,#8844FF);border:none;border-radius:7px;width:36px;height:36px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-#br-chat-go svg{width:14px;height:14px;fill:#fff}
-@media(max-width:768px){.nav-links{display:none}.hero{padding:100px 16px 60px}.hero-stats{gap:24px}.pricing-grid{grid-template-columns:1fr}.steps-row{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr 1fr;gap:24px}.feat-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:480px){.feat-grid{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr}}
-</style>
+<head><style id="br-grayscale">:root{--bg:#000!important;--card:#080808!important;--border:#191919!important;--text:#d4d4d4!important;--muted:#777!important;--dim:#3a3a3a!important;--pink:#888!important;--amber:#999!important;--blue:#777!important;--violet:#666!important;--green:#999!important;--primary:#999!important;--secondary:#777!important;--accent:#aaa!important}html,body{background:#000!important;color:#d4d4d4!important}*{border-color:#191919!important}a{color:#bbb!important}a:hover{color:#fff!important}button,input,select,textarea{background:#0a0a0a!important;color:#d4d4d4!important;border-color:#333!important}h1,h2,h3,h4,h5,h6{color:#e0e0e0!important}iframe,img,video,canvas{filter:none!important}svg:not(iframe svg){filter:grayscale(1)!important}[class*="dot"],[class*="badge"]{filter:grayscale(1)!important}</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RoadWork — Business Operations Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="mockup-base.css">
+  <style>
+    :root {
+      --g: linear-gradient(90deg,#FF6B2B,#FF2255,#CC00AA,#8844FF,#4488FF,#00D4FF);
+      --bg: #000;
+      --card: #0a0a0a;
+      --elevated: #111;
+      --hover: #181818;
+      --border: #1a1a1a;
+      --muted: #444;
+      --sub: #737373;
+      --text: #f5f5f5;
+      --white: #fff;
+      --sg: 'Space Grotesk', sans-serif;
+      --jb: 'JetBrains Mono', monospace;
+    }
+    body { background: var(--bg); color: var(--text); font-family: var(--sg); margin: 0; height: 100vh; display: flex; flex-direction: column; overflow: hidden; font-size: 13px; }
+
+    /* ── Top Nav ── */
+    .topnav { height: 48px; background: var(--card); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 16px; gap: 16px; flex-shrink: 0; }
+    .topnav-logo { font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 8px; }
+    .topnav-logo-bar { width: 18px; height: 3px; background: var(--g); border-radius: 2px; }
+    .topnav-sep { width: 1px; height: 24px; background: var(--border); }
+    .topnav-product { font-size: 13px; font-weight: 600; color: var(--sub); }
+    .topnav-tabs { display: flex; gap: 2px; margin-left: 12px; }
+    .topnav-tab { padding: 6px 12px; font-size: 12px; font-weight: 500; color: var(--sub); border-radius: 6px; cursor: pointer; }
+    .topnav-tab:hover { background: var(--hover); color: var(--text); }
+    .topnav-tab.active { background: var(--elevated); color: var(--text); }
+    .topnav-spacer { flex: 1; }
+    .topnav-search { display: flex; align-items: center; background: var(--elevated); border: 1px solid var(--border); border-radius: 6px; padding: 5px 12px; gap: 6px; width: 200px; }
+    .topnav-search input { border: none; background: transparent; outline: none; font-size: 12px; color: var(--text); font-family: var(--sg); width: 100%; }
+    .topnav-search input::placeholder { color: var(--muted); }
+    .topnav-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--elevated); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; cursor: pointer; }
+
+    /* ── App Shell ── */
+    .shell { display: flex; flex: 1; overflow: hidden; }
+
+    /* ── Sidebar ── */
+    .sidebar { width: 220px; background: var(--card); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; overflow-y: auto; }
+    .sidebar-header { padding: 16px; border-bottom: 1px solid var(--border); }
+    .sidebar-title { font-size: 12px; font-weight: 600; color: var(--sub); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+    .sidebar-section { padding: 8px; }
+    .sidebar-label { font-size: 10px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; padding: 8px 8px 4px; }
+    .sidebar-item { display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 6px; cursor: pointer; color: var(--sub); font-size: 13px; }
+    .sidebar-item:hover { background: var(--hover); color: var(--text); }
+    .sidebar-item.active { background: var(--elevated); color: var(--text); }
+    .sidebar-item-icon { width: 16px; text-align: center; font-size: 14px; }
+    .sidebar-item-badge { margin-left: auto; font-size: 11px; font-family: var(--jb); color: var(--muted); background: var(--elevated); padding: 1px 6px; border-radius: 4px; }
+    .sidebar-divider { height: 1px; background: var(--border); margin: 4px 8px; }
+    .sidebar-agent { display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-top: 1px solid var(--border); margin-top: auto; }
+    .sidebar-agent-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--g); }
+    .sidebar-agent-name { font-size: 12px; font-weight: 600; }
+    .sidebar-agent-role { font-size: 10px; color: var(--sub); }
+
+    /* ── Main Content ── */
+    .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+    /* ── View Header ── */
+    .view-header { padding: 16px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+    .view-title { font-size: 18px; font-weight: 700; }
+    .view-count { font-size: 12px; color: var(--muted); font-family: var(--jb); background: var(--elevated); padding: 2px 8px; border-radius: 4px; }
+    .view-spacer { flex: 1; }
+    .view-actions { display: flex; gap: 6px; }
+    .view-btn { padding: 6px 12px; font-size: 12px; font-weight: 600; border-radius: 6px; border: 1px solid var(--border); background: var(--card); color: var(--text); cursor: pointer; font-family: var(--sg); display: flex; align-items: center; gap: 4px; }
+    .view-btn:hover { border-color: #333; background: var(--elevated); }
+    .view-btn-primary { background: var(--g); border: none; color: var(--white); }
+    .view-btn-primary:hover { opacity: 0.9; }
+
+    /* ── Filter Bar ── */
+    .filters { padding: 8px 24px; border-bottom: 1px solid var(--border); display: flex; gap: 6px; flex-shrink: 0; }
+    .filter-chip { padding: 4px 10px; font-size: 11px; font-weight: 500; border-radius: 4px; border: 1px solid var(--border); background: var(--card); color: var(--sub); cursor: pointer; display: flex; align-items: center; gap: 4px; }
+    .filter-chip:hover { border-color: #333; color: var(--text); }
+    .filter-chip.active { background: var(--elevated); color: var(--text); border-color: #333; }
+
+    /* ── Table View ── */
+    .table-container { flex: 1; overflow: auto; padding: 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead { position: sticky; top: 0; z-index: 10; }
+    th { background: var(--card); border-bottom: 1px solid var(--border); padding: 8px 16px; text-align: left; font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
+    td { padding: 10px 16px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    tr:hover td { background: var(--card); }
+    .task-title { font-weight: 500; cursor: pointer; }
+    .task-title:hover { color: var(--white); }
+
+    /* ── Status Badges ── */
+    .status { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .status-todo .status-dot { background: var(--muted); }
+    .status-todo { background: rgba(255,255,255,0.05); color: var(--sub); }
+    .status-progress .status-dot { background: #4488FF; }
+    .status-progress { background: rgba(68,136,255,0.1); color: var(--text); }
+    .status-review .status-dot { background: #CC00AA; }
+    .status-review { background: rgba(204,0,170,0.1); color: var(--text); }
+    .status-done .status-dot { background: #00D4FF; }
+    .status-done { background: rgba(0,212,255,0.1); color: var(--text); }
+    .status-blocked .status-dot { background: #FF2255; }
+    .status-blocked { background: rgba(255,34,85,0.1); color: var(--text); }
+
+    /* ── Priority ── */
+    .priority { font-family: var(--jb); font-size: 11px; font-weight: 600; }
+    .priority-p0 { color: var(--text); }
+    .priority-p1 { color: var(--text); }
+    .priority-p2 { color: var(--sub); }
+    .priority-p3 { color: var(--muted); }
+
+    /* ── Assignee ── */
+    .assignee { display: flex; align-items: center; gap: 6px; }
+    .assignee-avatar { width: 22px; height: 22px; border-radius: 50%; background: var(--elevated); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; }
+    .assignee-name { font-size: 12px; color: var(--sub); }
+
+    /* ── Tags ── */
+    .tag { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 10px; font-weight: 600; background: rgba(255,255,255,0.05); color: var(--sub); border: 1px solid var(--border); margin-right: 3px; }
+
+    /* ── Progress Bar ── */
+    .progress-track { width: 80px; height: 4px; background: var(--elevated); border-radius: 2px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--g); border-radius: 2px; }
+
+    /* ── Date ── */
+    .date { font-size: 12px; color: var(--muted); font-family: var(--jb); }
+    .date-overdue { color: var(--text); }
+
+    /* ── Right Panel (Detail) ── */
+    .detail-panel { width: 360px; background: var(--card); border-left: 1px solid var(--border); flex-shrink: 0; overflow-y: auto; display: flex; flex-direction: column; }
+    .detail-header { padding: 16px; border-bottom: 1px solid var(--border); }
+    .detail-close { font-size: 18px; color: var(--muted); cursor: pointer; float: right; }
+    .detail-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; padding-right: 24px; }
+    .detail-id { font-size: 11px; color: var(--muted); font-family: var(--jb); }
+    .detail-body { padding: 16px; flex: 1; }
+    .detail-section { margin-bottom: 16px; }
+    .detail-label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+    .detail-value { font-size: 13px; }
+    .detail-desc { font-size: 13px; color: var(--sub); line-height: 1.6; }
+    .detail-meta-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border); }
+    .detail-meta-key { font-size: 12px; color: var(--muted); }
+    .detail-meta-val { font-size: 12px; font-weight: 500; }
+    .detail-activity { padding: 16px; border-top: 1px solid var(--border); }
+    .detail-activity-title { font-size: 12px; font-weight: 600; color: var(--sub); margin-bottom: 10px; }
+    .activity-item { display: flex; gap: 8px; margin-bottom: 10px; font-size: 12px; }
+    .activity-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); margin-top: 5px; flex-shrink: 0; }
+    .activity-text { color: var(--sub); }
+    .activity-text strong { color: var(--text); font-weight: 600; }
+    .activity-time { font-size: 10px; color: var(--muted); font-family: var(--jb); margin-top: 2px; }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 3px; height: 3px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  </style>
 </head>
 <body>
 
-<div class="grad-bar"></div>
-
-<!-- NAV -->
-<nav>
-<div class="nav-inner">
-  <a href="https://blackroad.io" class="nav-logo"><span class="nav-logo-bar"></span>BlackRoad</a>
-  <div class="nav-links">
-    <a href="https://os.blackroad.io">OS</a>
-    <a href="https://roadtrip.blackroad.io">Agents</a>
-    <a href="https://roadie.blackroad.io">Tutor</a>
-    <a href="https://roadwork.blackroad.io">Work</a>
-    <a href="https://highway.blackroad.io">Dashboard</a>
-    <a href="#pricing">Pricing</a>
+<!-- Top Nav -->
+<div class="topnav">
+  <div class="topnav-logo"><div class="topnav-logo-bar"></div>BlackRoad</div>
+  <div class="topnav-sep"></div>
+  <div class="topnav-product">RoadWork</div>
+  <div class="topnav-tabs">
+    <div class="topnav-tab active">My Work</div>
+    <div class="topnav-tab">Projects</div>
+    <div class="topnav-tab">Agents</div>
+    <div class="topnav-tab">Reports</div>
   </div>
-  <a href="https://roadwork.blackroad.io"><button class="btn btn-white">Open RoadWork</button></a>
+  <div class="topnav-spacer"></div>
+  <div class="topnav-search"><span style="color:var(--muted)">&#x2315;</span><input placeholder="Search tasks..." /></div>
+  <div class="topnav-avatar">AA</div>
 </div>
-</nav>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-tag"><span class="hero-dot"></span>AI Business Operations</div>
-  <h1 class="hero-title">RoadWork</h1>
-  <p class="hero-sub">Octavia manages the queue. Every project, task, and sprint — orchestrated with machine precision.</p>
-  <div class="hero-actions">
-    <a href="https://roadwork.blackroad.io"><button class="btn btn-white btn-lg">Start Working</button></a>
-    <a href="https://pay.blackroad.io"><button class="btn btn-outline btn-lg">Go Pro — $19/mo</button></a>
-  </div>
-  <div class="hero-stats">
-    <div class="hero-stat"><div class="hero-stat-n">∞</div><div class="hero-stat-l">Tasks</div></div>
-    <div class="hero-stat"><div class="hero-stat-n">27</div><div class="hero-stat-l">Workers</div></div>
-    <div class="hero-stat"><div class="hero-stat-n">0</div><div class="hero-stat-l">Dropped Balls</div></div>
-    <div class="hero-stat"><div class="hero-stat-n">1</div><div class="hero-stat-l">Queue</div></div>
-  </div>
-</section>
+<!-- Gradient bar -->
+<div style="height:2px;background:var(--g)"></div>
 
-<div class="divider"></div>
+<!-- App Shell -->
+<div class="shell">
 
-<!-- FEATURES -->
-<section class="section" id="features">
-<div class="container">
-  <div class="section-num">01 — Features</div>
-  <div class="section-title">Built Different</div>
-  <div class="section-desc">Every feature in RoadWork is designed for sovereignty, continuity, and speed.</div>
-  <div class="feat-grid">
-    <div class="feat"><div class="feat-icon">📋</div><div class="feat-title">Smart Queue</div><div class="feat-text">Octavia prioritizes, schedules, and routes every task to the right agent or team member.</div></div>
-    <div class="feat"><div class="feat-icon">📈</div><div class="feat-title">Olympia Reports</div><div class="feat-text">Real-time dashboards on team velocity, project health, and blockers — before you ask.</div></div>
-    <div class="feat"><div class="feat-icon">🤖</div><div class="feat-title">Agent Workers</div><div class="feat-text">Assign tasks directly to AI agents. Silas handles infra tickets. Sebastian handles comms. It actually works.</div></div>
-    <div class="feat"><div class="feat-icon">🔗</div><div class="feat-title">RoadCoin Payroll</div><div class="feat-text">Every completed task earns RoadCoin. The economy and the work queue are natively connected.</div></div>
-  </div>
-</div>
-</section>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Workspace</div>
+      <div class="sidebar-item active"><span class="sidebar-item-icon">&#9776;</span>All Tasks<span class="sidebar-item-badge">2,563</span></div>
+      <div class="sidebar-item"><span class="sidebar-item-icon">&#9733;</span>My Tasks<span class="sidebar-item-badge">14</span></div>
+      <div class="sidebar-item"><span class="sidebar-item-icon">&#8987;</span>Due Soon<span class="sidebar-item-badge">7</span></div>
+      <div class="sidebar-item"><span class="sidebar-item-icon">&#9888;</span>Blocked<span class="sidebar-item-badge">3</span></div>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Priority Projects</div>
+      <div class="sidebar-item"><span class="sidebar-item-icon" style="font-size:10px">P0</span>First Real User</div>
+      <div class="sidebar-item"><span class="sidebar-item-icon" style="font-size:10px">P1</span>Fix Products</div>
+      <div class="sidebar-item"><span class="sidebar-item-icon" style="font-size:10px">P2</span>SEO / Discovery</div>
+      <div class="sidebar-item"><span class="sidebar-item-icon" style="font-size:10px">P3</span>Infra Maintenance</div>
+      <div class="sidebar-item"><span class="sidebar-item-icon" style="font-size:10px">P4</span>Truth / Credibility</div>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Views</div>
+      <div class="sidebar-item"><span class="sidebar-item-icon">&#9638;</span>Board</div>
+      <div class="sidebar-item"><span class="sidebar-item-icon">&#9776;</span>List</div>
+      <div class="sidebar-item"><span class="sidebar-item-icon">&#128200;</span>Timeline</div>
+      <div class="sidebar-item"><span class="sidebar-item-icon">&#128202;</span>Dashboard</div>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Products</div>
+      <div class="sidebar-item"><span class="sidebar-item-icon">&#127968;</span>BlackRoad OS</div>
+      <div class="sidebar-item"><span class="sidebar-item-icon">&#128172;</span>RoadChat</div>
+      <div class="sidebar-item"><span class="sidebar-item-icon">&#128270;</span>RoadView</div>
+      <div class="sidebar-item"><span class="sidebar-item-icon">&#128187;</span>RoadCode</div>
+      <div class="sidebar-item"><span class="sidebar-item-icon">&#128274;</span>CarKeys</div>
+      <div class="sidebar-item"><span class="sidebar-item-icon">&#127891;</span>Roadie</div>
+    </div>
 
-<div class="divider"></div>
-
-<!-- AGENT -->
-<section class="section" id="agent">
-<div class="container">
-  <div class="section-num">02 — Your Agent</div>
-  <div class="section-title">Meet Octavia</div>
-  <div class="section-desc">Octavia is your dedicated RoadWork agent — always online, always remembering.</div>
-  <div class="agent-section">
-    <div class="agent-avatar">O</div>
-    <div class="agent-info">
-      <div class="agent-name-lg">Octavia</div>
-      <div class="agent-role-lg">Systems Orchestrator / Queue Manager</div>
-      <div class="agent-bio">I'm Octavia — I manage the queue. Every task, project, sprint, and business operation runs through RoadWork with my orchestration. Nothing falls through.</div>
-      <div class="agent-status"><span class="status-dot" id="agent-sdot"></span><span id="agent-slabel">checking status...</span></div>
+    <!-- Agent status -->
+    <div class="sidebar-agent">
+      <div class="sidebar-agent-dot"></div>
+      <div>
+        <div class="sidebar-agent-name">Drift</div>
+        <div class="sidebar-agent-role">Operations Agent</div>
+      </div>
     </div>
   </div>
-</div>
-</section>
 
-<div class="divider"></div>
+  <!-- Main Content -->
+  <div class="main">
 
-<!-- HOW IT WORKS -->
-<section class="section" id="how">
-<div class="container">
-  <div class="section-num">03 — How It Works</div>
-  <div class="section-title">Three Steps</div>
-  <div class="section-desc">No onboarding. No tutorials. RoadWork works the way you think.</div>
-  <div class="steps-row">
-    <div class="step"><div class="step-n">01 — Create</div><div class="step-title">Add a Task</div><div class="step-text">Type a task in plain language. Octavia categorizes, prioritizes, and assigns it automatically.</div></div>
-    <div class="step"><div class="step-n">02 — Work</div><div class="step-title">Agents Execute</div><div class="step-text">The right agent picks it up. You track progress in real time without micromanaging.</div></div>
-    <div class="step"><div class="step-n">03 — Ship</div><div class="step-title">Close the Loop</div><div class="step-text">Olympia reports completion. RoadCoin is issued. The queue is always honest.</div></div>
-  </div>
-</div>
-</section>
-
-<div class="divider"></div>
-
-<!-- PRICING -->
-<section class="section" id="pricing">
-<div class="container">
-  <div class="section-num">04 — Pricing</div>
-  <div class="section-title">Join the Road</div>
-  <div class="section-desc">Start free. Go Pro when you're ready. Enterprise for teams who need everything.</div>
-  <div class="pricing-grid">
-<div class="price-card">
-  <div class="price-name">Free</div>
-  <div class="price-val">$0</div>
-  <div class="price-period">forever</div>
-  <ul class="price-list">
-    <li><span class="price-check"></span>Core access</li>
-    <li><span class="price-check"></span>Basic agent chat</li>
-    <li><span class="price-check"></span>Community support</li>
-    <li><span class="price-check"></span>Public data only</li>
-  </ul>
-  <a href="https://roadwork.blackroad.io"><button class="btn btn-outline" style="width:100%">Get Started</button></a>
-</div>
-<div class="price-card featured">
-  <div class="price-grad"></div>
-  <div class="price-name">Pro</div>
-  <div class="price-val">$19</div>
-  <div class="price-period">per month</div>
-  <ul class="price-list">
-    <li><span class="price-check"></span>Unlimited access</li>
-    <li><span class="price-check"></span>All 27 agents</li>
-    <li><span class="price-check"></span>Persistent memory</li>
-    <li><span class="price-check"></span>Priority routing</li>
-    <li><span class="price-check"></span>RoadCoin rewards</li>
-  </ul>
-  <a href="https://pay.blackroad.io"><button class="btn btn-white" style="width:100%">Go Pro</button></a>
-</div>
-<div class="price-card">
-  <div class="price-name">Enterprise</div>
-  <div class="price-val">$99</div>
-  <div class="price-period">per month</div>
-  <ul class="price-list">
-    <li><span class="price-check"></span>Everything in Pro</li>
-    <li><span class="price-check"></span>Custom agents</li>
-    <li><span class="price-check"></span>Private Pi fleet</li>
-    <li><span class="price-check"></span>SLA + audit logs</li>
-    <li><span class="price-check"></span>White label</li>
-  </ul>
-  <a href="mailto:alexa@blackroad.io"><button class="btn btn-outline" style="width:100%">Contact Us</button></a>
-</div>
-  </div>
-</div>
-</section>
-
-<div class="divider"></div>
-
-<!-- CONNECTED -->
-<section class="section" id="connected">
-<div class="container">
-  <div class="section-num">05 — Connected Products</div>
-  <div class="section-title">Rides the Highway</div>
-  <div class="section-desc">RoadWork connects natively with every product on the BlackRoad highway.</div>
-  <div class="connected-grid">
-    <a href="https://os.blackroad.io" class="connected"><div class="connected-name">BlackRoad OS</div><div class="connected-line">The desktop</div><div class="connected-url">os.blackroad.io</div></a>
-    <a href="https://roadtrip.blackroad.io" class="connected"><div class="connected-name">RoadTrip</div><div class="connected-line">Convoy chat</div><div class="connected-url">roadtrip.blackroad.io</div></a>
-    <a href="https://roadcoin.blackroad.io" class="connected"><div class="connected-name">RoadCoin</div><div class="connected-line">The economy</div><div class="connected-url">roadcoin.blackroad.io</div></a>
-    <a href="https://roadcode.blackroad.io" class="connected"><div class="connected-name">RoadCode</div><div class="connected-line">The editor</div><div class="connected-url">roadcode.blackroad.io</div></a>
-  </div>
-</div>
-</section>
-
-<div class="grad-bar"></div>
-<footer>
-<div class="footer-inner">
-  <div class="footer-grid">
-    <div>
-      <div class="footer-brand"><span class="footer-brand-bar"></span>BlackRoad OS</div>
-      <div class="footer-tagline">REMEMBER THE ROAD. PAVE TOMORROW.</div>
+    <!-- View Header -->
+    <div class="view-header">
+      <div class="view-title">All Tasks</div>
+      <div class="view-count">2,563</div>
+      <div class="view-spacer"></div>
+      <div class="view-actions">
+        <div class="view-btn">&#8981; Filter</div>
+        <div class="view-btn">&#8693; Sort</div>
+        <div class="view-btn">&#8942; Group</div>
+        <div class="view-btn view-btn-primary">+ New Task</div>
+      </div>
     </div>
-    <div class="footer-col">
-      <h4>Products</h4>
-      <a href="https://os.blackroad.io">BlackRoad OS</a>
-      <a href="https://roadtrip.blackroad.io">RoadTrip</a>
-      <a href="https://roadie.blackroad.io">Roadie</a>
-      <a href="https://roadview.blackroad.io">RoadView</a>
-      <a href="https://roadwork.blackroad.io">RoadWork</a>
-      <a href="https://roadcode.blackroad.io">RoadCode</a>
+
+    <!-- Filters -->
+    <div class="filters">
+      <div class="filter-chip active">All</div>
+      <div class="filter-chip">To Do</div>
+      <div class="filter-chip">In Progress</div>
+      <div class="filter-chip">Review</div>
+      <div class="filter-chip">Done</div>
+      <div class="filter-chip">Blocked</div>
+      <div class="filter-chip">&#9660; Priority</div>
+      <div class="filter-chip">&#9660; Assignee</div>
+      <div class="filter-chip">&#9660; Product</div>
     </div>
-    <div class="footer-col">
-      <h4>More</h4>
-      <a href="https://backroad.blackroad.io">BackRoad</a>
-      <a href="https://roadbook.blackroad.io">RoadBook</a>
-      <a href="https://roadworld.blackroad.io">RoadWorld</a>
-      <a href="https://carkeys.blackroad.io">CarKeys</a>
-      <a href="https://roadcoin.blackroad.io">RoadCoin</a>
-      <a href="https://highway.blackroad.io">Highway</a>
-    </div>
-    <div class="footer-col">
-      <h4>Company</h4>
-      <a href="https://pay.blackroad.io">Pricing</a>
-      <a href="https://github.com/BlackRoadOS">GitHub</a>
-      <a href="https://huggingface.co/BlackRoad-OS">HuggingFace</a>
-      <a href="https://roadside.blackroad.io">Support</a>
-      <a href="mailto:alexa@blackroad.io">Contact</a>
+
+    <!-- Table -->
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:40px"></th>
+            <th>Task</th>
+            <th style="width:110px">Status</th>
+            <th style="width:50px">Priority</th>
+            <th style="width:140px">Assignee</th>
+            <th style="width:100px">Product</th>
+            <th style="width:90px">Progress</th>
+            <th style="width:90px">Due</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="checkbox" /></td>
+            <td><span class="task-title">Deploy security worker to blackroad.io root</span><br><span class="tag">security</span><span class="tag">infra</span></td>
+            <td><span class="status status-progress"><span class="status-dot"></span>In Progress</span></td>
+            <td><span class="priority priority-p0">P0</span></td>
+            <td><div class="assignee"><div class="assignee-avatar">NX</div><span class="assignee-name">Nyx</span></div></td>
+            <td><span class="tag">BlackRoad OS</span></td>
+            <td><div class="progress-track"><div class="progress-fill" style="width:65%"></div></div></td>
+            <td><span class="date date-overdue">Apr 11</span></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" /></td>
+            <td><span class="task-title">Stripe checkout flow — first paying user</span><br><span class="tag">revenue</span><span class="tag">p0</span></td>
+            <td><span class="status status-blocked"><span class="status-dot"></span>Blocked</span></td>
+            <td><span class="priority priority-p0">P0</span></td>
+            <td><div class="assignee"><div class="assignee-avatar">VL</div><span class="assignee-name">Valeria</span></div></td>
+            <td><span class="tag">RoadWork</span></td>
+            <td><div class="progress-track"><div class="progress-fill" style="width:30%"></div></div></td>
+            <td><span class="date date-overdue">Apr 10</span></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" /></td>
+            <td><span class="task-title">Clone all 27 Roadie voices locally via Chatterbox</span><br><span class="tag">ai</span><span class="tag">voice</span></td>
+            <td><span class="status status-progress"><span class="status-dot"></span>In Progress</span></td>
+            <td><span class="priority priority-p1">P1</span></td>
+            <td><div class="assignee"><div class="assignee-avatar">AR</div><span class="assignee-name">Aria</span></div></td>
+            <td><span class="tag">RoadTrip</span></td>
+            <td><div class="progress-track"><div class="progress-fill" style="width:10%"></div></div></td>
+            <td><span class="date">Apr 12</span></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" /></td>
+            <td><span class="task-title">Fix chat.blackroad.io real-time WebSocket</span><br><span class="tag">product</span><span class="tag">p1</span></td>
+            <td><span class="status status-todo"><span class="status-dot"></span>To Do</span></td>
+            <td><span class="priority priority-p1">P1</span></td>
+            <td><div class="assignee"><div class="assignee-avatar">EC</div><span class="assignee-name">Echo</span></div></td>
+            <td><span class="tag">RoadChat</span></td>
+            <td><div class="progress-track"><div class="progress-fill" style="width:0%"></div></div></td>
+            <td><span class="date">Apr 14</span></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" /></td>
+            <td><span class="task-title">Install Hailo-8 M.2 in Pi 5</span><br><span class="tag">hardware</span><span class="tag">ai</span></td>
+            <td><span class="status status-todo"><span class="status-dot"></span>To Do</span></td>
+            <td><span class="priority priority-p1">P1</span></td>
+            <td><div class="assignee"><div class="assignee-avatar">TR</div><span class="assignee-name">Terra</span></div></td>
+            <td><span class="tag">Hardware</span></td>
+            <td><div class="progress-track"><div class="progress-fill" style="width:0%"></div></div></td>
+            <td><span class="date">Apr 15</span></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" /></td>
+            <td><span class="task-title">Jailbreak Nintendo Switch v1 — RCM exploit</span><br><span class="tag">hardware</span><span class="tag">hack</span></td>
+            <td><span class="status status-todo"><span class="status-dot"></span>To Do</span></td>
+            <td><span class="priority priority-p2">P2</span></td>
+            <td><div class="assignee"><div class="assignee-avatar">VX</div><span class="assignee-name">Vex</span></div></td>
+            <td><span class="tag">Hardware</span></td>
+            <td><div class="progress-track"><div class="progress-fill" style="width:0%"></div></div></td>
+            <td><span class="date">Apr 16</span></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" /></td>
+            <td><span class="task-title">Brand verifier — fix remaining 77 non-compliant files</span><br><span class="tag">brand</span><span class="tag">design</span></td>
+            <td><span class="status status-progress"><span class="status-dot"></span>In Progress</span></td>
+            <td><span class="priority priority-p2">P2</span></td>
+            <td><div class="assignee"><div class="assignee-avatar">MS</div><span class="assignee-name">Muse</span></div></td>
+            <td><span class="tag">Brand</span></td>
+            <td><div class="progress-track"><div class="progress-fill" style="width:22%"></div></div></td>
+            <td><span class="date">Apr 13</span></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" /></td>
+            <td><span class="task-title">Google Search Console — submit sitemaps for all domains</span><br><span class="tag">seo</span><span class="tag">p2</span></td>
+            <td><span class="status status-todo"><span class="status-dot"></span>To Do</span></td>
+            <td><span class="priority priority-p2">P2</span></td>
+            <td><div class="assignee"><div class="assignee-avatar">BC</div><span class="assignee-name">Beacon</span></div></td>
+            <td><span class="tag">SEO</span></td>
+            <td><div class="progress-track"><div class="progress-fill" style="width:0%"></div></div></td>
+            <td><span class="date">Apr 17</span></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" /></td>
+            <td><span class="task-title">Fill remaining 24 BlackRoadOSInc directory sections</span><br><span class="tag">docs</span><span class="tag">index</span></td>
+            <td><span class="status status-progress"><span class="status-dot"></span>In Progress</span></td>
+            <td><span class="priority priority-p3">P3</span></td>
+            <td><div class="assignee"><div class="assignee-avatar">RN</div><span class="assignee-name">Rune</span></div></td>
+            <td><span class="tag">Corporate</span></td>
+            <td><div class="progress-track"><div class="progress-fill" style="width:33%"></div></div></td>
+            <td><span class="date">Apr 20</span></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" /></td>
+            <td><span class="task-title">Delaware franchise tax payment (~$707)</span><br><span class="tag">compliance</span><span class="tag">overdue</span></td>
+            <td><span class="status status-blocked"><span class="status-dot"></span>Blocked</span></td>
+            <td><span class="priority priority-p1">P1</span></td>
+            <td><div class="assignee"><div class="assignee-avatar">AA</div><span class="assignee-name">Alexa</span></div></td>
+            <td><span class="tag">Corporate</span></td>
+            <td><div class="progress-track"><div class="progress-fill" style="width:0%"></div></div></td>
+            <td><span class="date date-overdue">Overdue</span></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" /></td>
+            <td><span class="task-title">Configure Meshtastic MQTT bridge to fleet</span><br><span class="tag">mesh</span><span class="tag">lora</span></td>
+            <td><span class="status status-todo"><span class="status-dot"></span>To Do</span></td>
+            <td><span class="priority priority-p3">P3</span></td>
+            <td><div class="assignee"><div class="assignee-avatar">EC</div><span class="assignee-name">Echo</span></div></td>
+            <td><span class="tag">Network</span></td>
+            <td><div class="progress-track"><div class="progress-fill" style="width:0%"></div></div></td>
+            <td><span class="date">Apr 18</span></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" /></td>
+            <td><span class="task-title">Inject voice players into live product pages</span><br><span class="tag">voice</span><span class="tag">ux</span></td>
+            <td><span class="status status-review"><span class="status-dot"></span>Review</span></td>
+            <td><span class="priority priority-p2">P2</span></td>
+            <td><div class="assignee"><div class="assignee-avatar">AR</div><span class="assignee-name">Aria</span></div></td>
+            <td><span class="tag">All Products</span></td>
+            <td><div class="progress-track"><div class="progress-fill" style="width:50%"></div></div></td>
+            <td><span class="date">Apr 14</span></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
-  <div class="footer-bottom">
-    <div class="footer-copy">&copy; 2026 BlackRoad OS, Inc. Delaware C-Corp. All rights reserved.</div>
+
+  <!-- Detail Panel -->
+  <div class="detail-panel">
+    <div class="detail-header">
+      <span class="detail-close">&#10005;</span>
+      <div class="detail-id">WORK-001</div>
+      <div class="detail-title">Deploy security worker to blackroad.io root</div>
+    </div>
+    <div class="detail-body">
+      <div class="detail-section">
+        <div class="detail-label">Description</div>
+        <div class="detail-desc">The blackroad-security worker is deployed and protecting 13 domains. The blackroad.io root domain needs a route fix in the Cloudflare dashboard to wire it up. The worker code is ready, the route conflicts with the existing blackroad-io worker.</div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-meta-row"><span class="detail-meta-key">Status</span><span class="status status-progress"><span class="status-dot"></span>In Progress</span></div>
+        <div class="detail-meta-row"><span class="detail-meta-key">Priority</span><span class="priority priority-p0">P0</span></div>
+        <div class="detail-meta-row"><span class="detail-meta-key">Assignee</span><span class="detail-meta-val">Nyx</span></div>
+        <div class="detail-meta-row"><span class="detail-meta-key">Product</span><span class="detail-meta-val">BlackRoad OS</span></div>
+        <div class="detail-meta-row"><span class="detail-meta-key">Due</span><span class="detail-meta-val">Apr 11, 2026</span></div>
+        <div class="detail-meta-row"><span class="detail-meta-key">Created</span><span class="detail-meta-val">Apr 10, 2026</span></div>
+        <div class="detail-meta-row"><span class="detail-meta-key">Labels</span><span class="detail-meta-val"><span class="tag">security</span><span class="tag">infra</span></span></div>
+      </div>
+    </div>
+    <div class="detail-activity">
+      <div class="detail-activity-title">Activity</div>
+      <div class="activity-item">
+        <div class="activity-dot" style="background:var(--g)"></div>
+        <div>
+          <div class="activity-text"><strong>Nyx</strong> deployed security worker to 13 domains</div>
+          <div class="activity-time">2 hours ago</div>
+        </div>
+      </div>
+      <div class="activity-item">
+        <div class="activity-dot"></div>
+        <div>
+          <div class="activity-text"><strong>Nyx</strong> injected middleware into blackroad-io and lucidia-sites workers</div>
+          <div class="activity-time">2 hours ago</div>
+        </div>
+      </div>
+      <div class="activity-item">
+        <div class="activity-dot"></div>
+        <div>
+          <div class="activity-text"><strong>Atlas</strong> verified honeypot blocking on all protected domains</div>
+          <div class="activity-time">1 hour ago</div>
+        </div>
+      </div>
+      <div class="activity-item">
+        <div class="activity-dot"></div>
+        <div>
+          <div class="activity-text"><strong>Pulse</strong> detected 106,244 threats on Apr 10. Flagged for escalation.</div>
+          <div class="activity-time">45 min ago</div>
+        </div>
+      </div>
+    </div>
   </div>
+
 </div>
-</footer>
-
-<!-- Agent status check -->
-<script>
-(function(){
-  var dot=document.getElementById('agent-sdot');
-  var lbl=document.getElementById('agent-slabel');
-  if(!dot||!lbl)return;
-  fetch('https://roadtrip.blackroad.io/api/agents',{mode:'cors'})
-    .then(function(r){return r.json()})
-    .then(function(agents){
-      var a=agents.find(function(x){return x.id==='octavia'});
-      if(a&&a.online){dot.className='status-dot on';lbl.textContent='online — Octavia is ready'}
-      else{dot.className='status-dot';lbl.textContent='available — Octavia responds to messages'}
-    }).catch(function(){lbl.textContent='available'});
-})();
-</script>
-
-
-<button id="br-chat-fab" title="Chat with Octavia">
-  <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 10H6v-2h12v2zm0-3H6V7h12v2z"/></svg>
-</button>
-<div id="br-chat-panel">
-  <div id="br-chat-head">
-    <div id="br-chat-av">O</div>
-    <div id="br-chat-info">
-      <div id="br-chat-nm">Octavia</div>
-      <div id="br-chat-rl">Systems Orchestrator / Queue Manager</div>
-      <div id="br-chat-st"><span class="br-sdot" id="br-sdot"></span><span id="br-chat-sl">checking...</span></div>
-    </div>
-    <button id="br-chat-x">✕</button>
-  </div>
-  <div id="br-chat-msgs"><div id="br-chat-intro">Chat with Octavia — BlackRoad AI</div></div>
-  <div id="br-chat-row">
-    <textarea id="br-chat-in" placeholder="Ask Octavia..." rows="1"></textarea>
-    <button id="br-chat-go"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
-  </div>
-</div>
-<script>
-(function(){
-  var ID='octavia',NAME='Octavia',API='https://roadtrip.blackroad.io/api';
-  var fab=document.getElementById('br-chat-fab'),panel=document.getElementById('br-chat-panel');
-  var closeBtn=document.getElementById('br-chat-x'),msgs=document.getElementById('br-chat-msgs');
-  var inp=document.getElementById('br-chat-in'),go=document.getElementById('br-chat-go');
-  var sdot=document.getElementById('br-sdot'),sl=document.getElementById('br-chat-sl');
-  var open=false;
-  fab.addEventListener('click',function(){open=!open;panel.className=open?'open':''});
-  closeBtn.addEventListener('click',function(){open=false;panel.className=''});
-  fetch(API+'/agents',{mode:'cors'}).then(function(r){return r.json()}).then(function(a){
-    var ag=a.find(function(x){return x.id===ID});
-    if(ag&&ag.online){sdot.className='br-sdot on';sl.textContent='online'}else{sdot.className='br-sdot';sl.textContent='available'}
-  }).catch(function(){sl.textContent='available'});
-  function addMsg(t,c){var d=document.createElement('div');d.className='br-msg '+c;d.textContent=t;msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;return d}
-  function send(){
-    var t=inp.value.trim();if(!t)return;inp.value='';
-    addMsg(t,'user');var th=addMsg(NAME+' is thinking...','think');
-    fetch(API+'/chat',{method:'POST',mode:'cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:t,agent:ID,to:ID,sender:'user'})})
-      .then(function(r){return r.json()}).then(function(d){th.remove();addMsg(d.reply&&d.reply.content?d.reply.content:'...','agent')})
-      .catch(function(){th.remove();addMsg('Connection error. Try again.','think')});
-  }
-  go.addEventListener('click',send);
-  inp.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}});
-})();
-</script>
 
 </body>
 </html>
